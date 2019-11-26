@@ -11,12 +11,14 @@ class CVS:
         self.index = Index()
         self.working_directory = WorkingDirectory()
         self.working_path = ""
+        self.cvs_path = os.path.join(self.working_path, "/CVS_VERSION")
 
     def init(self):
         self.__get_working_path()
         self.repository.init()
         self.working_directory.set_working_path(self.working_path)
         self.index.set_working_path(self.working_path)
+        self.index.set_cvs_path(self.cvs_path)
         self.working_directory.find_not_indexed_files(self.index.indexed_files)
 
     def add(self, filename):
@@ -47,7 +49,7 @@ class CVS:
     def hard_reset(self):
         self.repository.reset_head()
         self.index.reset(self.repository.head)
-        self.working_directory.reset()
+        self.working_directory.reset(self.index)
 
     def log(self) -> str:
         return self.repository.get_commit_history()
