@@ -34,7 +34,7 @@ class Index:
 
     def make_commit(self, commit_message) -> Commit:
         commit = Commit(commit_message)
-        commit.freeze_files(self.indexed_files)
+        commit.freeze_files(self.indexed_files, self.index_path)
         self.last_commit = commit
         return commit
 
