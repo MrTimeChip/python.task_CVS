@@ -1,4 +1,3 @@
-from cvs_trees.head import Head
 from cvs_trees.index import Index
 from cvs_trees.working_directory import WorkingDirectory
 from data_objects.commit import Commit
@@ -9,12 +8,11 @@ class CVS:
 
     def __init__(self):
         self.repository = Repository()
-        self.head = Head()
         self.index = Index()
         self.working_directory = WorkingDirectory()
 
     def init(self):
-        self.repository.init(self.head)
+        self.repository.init()
         self.working_directory.find_not_indexed_files()
 
     def add(self, filename):
@@ -37,16 +35,16 @@ class CVS:
             self.hard_reset()
 
     def soft_reset(self):
-        self.head.reset()
+        self.repository.reset_head()
 
     def mixed_reset(self):
-        self.head.reset()
+        self.repository.reset_head()
         self.index.reset()
 
     def hard_reset(self):
-        self.head.reset()
+        self.repository.reset_head()
         self.index.reset()
-        self.head.reset()
+        self.working_directory.reset()
 
     def log(self) -> str:
         return self.repository.get_commit_history()
