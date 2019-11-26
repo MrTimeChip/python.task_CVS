@@ -17,7 +17,7 @@ class CVS:
         self.repository.init()
         self.working_directory.set_working_path(self.working_path)
         self.index.set_working_path(self.working_path)
-        self.working_directory.find_not_indexed_files()
+        self.working_directory.find_not_indexed_files(self.index.indexed_files)
 
     def add(self, filename):
         self.index.add_new_file(filename)
