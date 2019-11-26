@@ -20,7 +20,7 @@ class Index:
         self.indexed_files.add(filename)
 
     def is_file_in_working_directory(self, filename) -> bool:
-        return os.path.exists(self.working_path + filename)
+        return os.path.exists(os.path.join(self.working_path, filename))
 
     def make_commit(self, commit_message) -> Commit:
         commit = Commit(commit_message)
