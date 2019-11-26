@@ -1,11 +1,16 @@
-commands = {}
+class CVS:
 
+    def init(self):
+        pass
 
-def main():
+    def add(self, filename):
+        pass
 
-    command = ""
-    commands[command]()
+    def commit(self, commit_message):
+        pass
 
+    def reset(self, mode):
+        pass
 
-if __name__ == '__main__':
-    main()
+    def log(self):
+        pass
