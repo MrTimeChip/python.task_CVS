@@ -3,11 +3,15 @@ from data_objects.branch import Branch
 
 class Head:
 
-    def set_branch(self, branch):
-        pass
+    def __init__(self):
+        self.current_branch = Branch("NONE")
+
+    def set_branch(self, branch: Branch):
+        self.current_branch = branch
 
     def get_current_branch(self) -> Branch:
-        pass
+        return self.current_branch
 
     def reset(self):
-        pass
+        prev_commit = self.current_branch.get_current_commit().previous_commit
+        self.current_branch = prev_commit
