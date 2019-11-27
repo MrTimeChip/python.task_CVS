@@ -1,6 +1,6 @@
-import os
 from cvs_trees.index import Index
 from cvs_trees.working_directory import WorkingDirectory
+from data_objects.directory_info import DirectoryInfo
 from data_objects.repostitory import Repository
 
 
@@ -10,26 +10,27 @@ class CVS:
         self.repository = Repository()
         self.index = Index()
         self.working_directory = WorkingDirectory()
-        self.working_path = ""
-        self.cvs_path = os.path.join(self.working_path, "/CVS_VERSION")
+        self.directory = DirectoryInfo()
 
     def init(self):
-        self.__get_working_path()
+        """Initializes new repository at current directory"""
         self.repository.init()
-        self.working_directory.set_working_path(self.working_path)
-        self.index.set_working_path(self.working_path)
-        self.index.set_cvs_path(self.cvs_path)
+        self.directory.init()
+        self.index.set_directory_info(self.directory)
         self.working_directory.find_not_indexed_files(self.index.indexed_files)
 
     def add(self, filename):
+        """Adds file to index"""
         self.index.add_new_file(filename)
 
     def commit(self, commit_message):
+        """Makes new commit"""
         commit = self.index.make_commit(commit_message)
         self.repository.add_commit(commit)
         self.repository.point_to_last_commit()
 
     def reset(self, mode):
+        """Resets current cvs state"""
         if mode == '--soft':
             self.soft_reset()
             return
@@ -40,19 +41,23 @@ class CVS:
             self.hard_reset()
 
     def soft_reset(self):
+        """Resets head"""
         self.repository.reset_head()
 
     def mixed_reset(self):
+        """Resets head and index"""
         self.repository.reset_head()
         self.index.reset(self.repository.head)
 
     def hard_reset(self):
+        """Resets head, index and rewrites files in working path"""
         self.repository.reset_head()
         self.index.reset(self.repository.head)
         self.working_directory.reset(self.index)
 
     def log(self) -> str:
+        """
+        Returns commit history at current branch
+        :returns commit history string
+        """
         return self.repository.get_commit_history()
-
-    def __get_working_path(self):
-        self.working_path = os.path.dirname(os.path.abspath(__file__))
