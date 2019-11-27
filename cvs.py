@@ -56,7 +56,7 @@ class CVS:
         self.index.reset(self.repository.head)
         self.working_directory.reset(self.index)
 
-    def log(self) -> str:
+    def log(self):
         """
         Returns commit history at current branch
         :returns commit history string
