@@ -61,4 +61,4 @@ class CVS:
         Returns commit history at current branch
         :returns commit history string
         """
-        return self.repository.get_commit_history()
+        self.repository.get_commit_history()

@@ -8,7 +8,12 @@ class Branch:
         self.current_commit = None
 
     def set_current_commit(self, commit):
+        """Sets current commit"""
         self.current_commit = commit
 
     def get_current_commit(self) -> Commit:
+        """
+        Returns current commit
+        :returns current commit
+        """
         return self.current_commit
