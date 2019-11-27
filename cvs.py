@@ -17,6 +17,7 @@ class CVS:
         self.repository.init()
         self.directory.init()
         self.index.set_directory_info(self.directory)
+        self.repository.set_directory_info(self.directory)
         self.working_directory.find_not_indexed_files(self.index.indexed_files)
 
     def add(self, filename):
