@@ -23,7 +23,7 @@ class Repository:
         """Adds new commit to lst branch, copying files"""
         if self.last_commit is None:
             self.last_commit = commit
-        for file, path in commit.get_copying_paths():
+        for file, path in commit.files_with_copying_paths:
             commit_path = self.directory.get_commits_path(
                 self.current_branch.name)
             copy_path = os.path.join(commit_path, file)
