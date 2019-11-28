@@ -4,21 +4,17 @@ from data_objects.branch import Branch
 class Head:
 
     def __init__(self):
-        self.current_branch = Branch("NONE")
+        self.__current_branch = Branch("NONE")
 
-    def set_branch(self, branch: Branch):
-        """Sets current branch"""
-        self.current_branch = branch
+    @property
+    def current_branch(self):
+        return self.__current_branch
 
-    def get_current_branch(self) -> Branch:
-        """
-        Returns current branch
-        :returns current branch
-        """
-        return self.current_branch
+    @current_branch.setter
+    def current_branch(self, value):
+        self.__current_branch = value
 
     def reset(self):
         """Moves head to previous commit"""
-        prev_commit = self.current_branch.get_current_commit().previous_commit
-        self.current_branch.set_current_commit(prev_commit)
-        self.current_branch = prev_commit
+        res_commit = self.__current_branch.get_current_commit().previous_commit
+        self.__current_branch.set_current_commit(res_commit)
