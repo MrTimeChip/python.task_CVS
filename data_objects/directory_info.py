@@ -11,12 +11,6 @@ class DirectoryInfo:
         self.__branches_commits_paths = {}
         self.__branches_paths = {}
 
-    def set_custom_path(self, path):
-        """Sets custom working path. Execution path by default."""
-        if not os.path.exists(path):
-            raise ValueError('No such path exists!')
-        self.working_path = path
-
     @property
     def branches_paths(self):
         return copy.copy(self.__branches_paths)
@@ -25,14 +19,18 @@ class DirectoryInfo:
     def branches_commits_paths(self):
         return copy.copy(self.__branches_commits_paths)
 
-    def init(self):
+    def init(self, path):
         """Initializes paths"""
-        if self.working_path == "":
-            self.working_path = os.path.abspath(
-                os.path.join(os.path.dirname(__file__),
-                             '..'))
-        self.cvs_path = os.path.join(self.working_path, "CVS")
+        self.working_path = path
+        if not os.path.exists(path):
+            raise ValueError(f'No such path found! {path}')
+        cvs_path_base = os.path.join(os.getenv('APPDATA'))
+        self.cvs_path = os.path.join(cvs_path_base, "CVS")
+        if not os.path.exists(self.cvs_path):
+            os.makedirs(self.cvs_path)
         self.index_path = os.path.join(self.cvs_path, "INDEX")
+        if not os.path.exists(self.index_path):
+            os.makedirs(self.index_path)
 
     def add_branch_path(self, branch_name):
         """Adds branch to paths"""
@@ -49,11 +47,11 @@ class DirectoryInfo:
     def get_branch_path(self, branch_name) -> str:
         """Returns branch path"""
         if branch_name not in self.__branches_paths.keys():
-            raise ValueError("No branch found!")
+            raise ValueError(f"No branch found! {branch_name}")
         return self.__branches_paths[branch_name]
 
     def get_commits_path(self, branch_name) -> str:
         """Return commits path for branch"""
         if branch_name not in self.__branches_paths.keys():
-            raise ValueError("No branch found!")
+            raise ValueError(f"No branch found! {branch_name}")
         return self.__branches_commits_paths[branch_name]
