@@ -21,6 +21,8 @@ class CVS:
 
         self.repository.init()
         self.working_directory.find_not_indexed_files(self.index.indexed_files)
+        print(f'Working path is {path}')
+        print(f'CVS path is {self.directory.cvs_path}')
 
     def add(self, filename):
         """Adds file to index"""
