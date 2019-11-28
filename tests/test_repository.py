@@ -28,9 +28,11 @@ class TestRepository(unittest.TestCase):
         index = Index()
         index.set_directory_info(self.di)
         index.add_new_file('TESTING.txt')
-        self.rep.add_commit(index.make_commit('Testing commit'))
+        commit = index.make_commit('Testing commit')
+        self.rep.add_commit(commit)
         commits_path = self.di.get_commits_path('master')
-        full_path = os.path.join(commits_path, 'TESTING.txt')
+        commit_path = os.path.join(commits_path, commit.commit_number)
+        full_path = os.path.join(commit_path, 'TESTING.txt')
         self.assertTrue(os.path.exists(full_path))
 
 
