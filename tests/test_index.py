@@ -2,7 +2,10 @@ import unittest
 import shutil
 import os
 
+from cvs_trees.head import Head
 from cvs_trees.index import Index
+from data_objects.branch import Branch
+from data_objects.commit import Commit
 from data_objects.directory_info import DirectoryInfo
 
 
@@ -44,7 +47,13 @@ class TestIndex(unittest.TestCase):
         self.index.make_commit("new commit")
         self.assertIsNotNone(self.index.last_commit)
 
-    #TODO: reset test
+    def test_reset_should_reset_to_head_commit(self):
+        head = Head()
+        head.current_branch = Branch('master')
+        commit = Commit('test')
+        head.current_branch.current_commit = commit
+        self.index.reset(head)
+        self.assertEqual(self.index.last_commit, commit)
 
 
 if __name__ == '__main__':
