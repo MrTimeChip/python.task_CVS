@@ -18,3 +18,6 @@ class Head:
         """Moves head to previous commit"""
         res_commit = self.__current_branch.current_commit.previous_commit
         self.__current_branch.current_commit = res_commit
+        commit_number = res_commit.commit_number
+        commit_message = res_commit.commit_message
+        print(f'New head commit is {commit_number} {commit_message}')
