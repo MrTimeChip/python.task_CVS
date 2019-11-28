@@ -58,7 +58,8 @@ class Commit:
         """Prints commit history, starting from this commit"""
         print(self.commit_number + '\n')
         print(self.commit_message + '\n')
-        for file, hashcode in self.__files_hashes:
+        for file in self.__files_hashes:
+            hashcode = self.__files_hashes[file]
             print(f'{hashcode} {file} \n')
         print("")
         if self.previous_commit is not None:
