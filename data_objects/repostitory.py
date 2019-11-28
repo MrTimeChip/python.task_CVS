@@ -23,10 +23,15 @@ class Repository:
         """Adds new commit to last branch, copying files"""
         for file in commit.files_with_copying_paths:
             path = commit.files_with_copying_paths[file]
-            commit_path = self.directory.get_commits_path(
+            commits_path = self.directory.get_commits_path(
                 self.current_branch.name)
+            commit_path = os.path.join(commits_path, commit.commit_number)
+            if not os.path.exists(commit_path):
+                os.makedirs(commit_path)
             copy_path = os.path.join(commit_path, file)
             copyfile(path, copy_path)
+            file_hash = commit.files_hashes[path]
+            print(f'File {file} saved - {file_hash}')
         commit.set_previous_commit(self.last_commit)
         self.last_commit = commit
         self.current_branch.set_current_commit(commit)
