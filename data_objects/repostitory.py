@@ -43,7 +43,7 @@ class Repository:
     def init(self):
         """Initializes repository with master branch"""
         self.current_branch = Branch("master")
-        self.head.set_branch(self.current_branch)
+        self.head.current_branch = self.current_branch
 
     def get_commit_history(self):
         self.last_commit.print_info()
