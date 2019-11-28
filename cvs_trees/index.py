@@ -53,7 +53,13 @@ class Index:
         return commit
 
     def reset(self, head: Head):
-        """Resets index to last commit, that head is pointing to"""
+        """Resets index to last commit that head is pointing to"""
         commit = head.get_current_branch().current_commit
-        self.__indexed_files = commit.__indexed_files
+        for file in commit.files:
+            branch_name = head.get_current_branch().name
+            commits_path = self.__directory.get_commits_path(branch_name)
+            source_path = os.path.join(commits_path, file)
+            copy_path = os.path.join(self.__directory.index_path, file)
+            copyfile(source_path, copy_path)
+        self.__indexed_files = commit.files
         self.__last_commit = commit
