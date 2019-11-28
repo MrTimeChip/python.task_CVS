@@ -20,10 +20,9 @@ class Repository:
         self.directory = directory_info
 
     def add_commit(self, commit):
-        """Adds new commit to lst branch, copying files"""
-        if self.last_commit is None:
-            self.last_commit = commit
-        for file, path in commit.files_with_copying_paths:
+        """Adds new commit to last branch, copying files"""
+        for file in commit.files_with_copying_paths:
+            path = commit.files_with_copying_paths[file]
             commit_path = self.directory.get_commits_path(
                 self.current_branch.name)
             copy_path = os.path.join(commit_path, file)
