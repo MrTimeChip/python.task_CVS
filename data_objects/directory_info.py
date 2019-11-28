@@ -11,6 +11,12 @@ class DirectoryInfo:
         self.__branches_commits_paths = {}
         self.__branches_paths = {}
 
+    def set_custom_path(self, path):
+        """Sets custom working path. Execution path by default."""
+        if not os.path.exists(path):
+            raise ValueError('No such path exists!')
+        self.working_path = path
+
     @property
     def branches_paths(self):
         return copy.copy(self.__branches_paths)
@@ -21,9 +27,10 @@ class DirectoryInfo:
 
     def init(self):
         """Initializes paths"""
-        self.working_path = os.path.abspath(
-            os.path.join(os.path.dirname(__file__),
-                         '..'))
+        if self.working_path == "":
+            self.working_path = os.path.abspath(
+                os.path.join(os.path.dirname(__file__),
+                             '..'))
         self.cvs_path = os.path.join(self.working_path, "CVS")
         self.index_path = os.path.join(self.cvs_path, "INDEX")
 
