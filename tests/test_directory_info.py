@@ -51,7 +51,7 @@ class DirectoryInfoTest(unittest.TestCase):
         self.info.set_custom_path(os.getenv('APPDATA'))
         self.info.init()
         path = self.info.working_path
-        self.assertEquals(path, os.getenv('APPDATA'))
+        self.assertEqual(path, os.getenv('APPDATA'))
 
 
 if __name__ == '__main__':
