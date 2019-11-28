@@ -45,6 +45,12 @@ class TestCommit(unittest.TestCase):
         keys = self.commit.files_hashes.keys()
         self.assertTrue(path in keys)
 
+    def test_commit_number_should_return_unique_commit_number(self):
+        first_number = self.commit.commit_number
+        other_commit = Commit("Other")
+        second_number = other_commit.commit_number
+        self.assertNotEqual(first_number, second_number)
+
 
 if __name__ == '__main__':
     unittest.main()
