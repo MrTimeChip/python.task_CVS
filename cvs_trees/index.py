@@ -36,6 +36,7 @@ class Index:
         source_file = os.path.join(self.__directory.working_path, filename)
         file_copy = os.path.join(self.__directory.index_path, filename)
         copyfile(source_file, file_copy)
+        print(f'File {source_file} added')
 
     def __is_file_in_working_directory(self, filename) -> bool:
         """Checks if file is in working __directory"""
@@ -55,11 +56,14 @@ class Index:
     def reset(self, head: Head):
         """Resets index to last commit that head is pointing to"""
         commit = head.current_branch.current_commit
+        print('Index reset')
         for file in commit.files:
             branch_name = head.current_branch.name
             commits_path = self.__directory.get_commits_path(branch_name)
-            source_path = os.path.join(commits_path, file)
+            commit_path = os.path.join(commits_path, commit.commit_number)
+            source_path = os.path.join(commit_path, file)
             copy_path = os.path.join(self.__directory.index_path, file)
             copyfile(source_path, copy_path)
+            print(f'Copied file from {source_path} to {copy_path}')
         self.__indexed_files = commit.files
         self.__last_commit = commit
