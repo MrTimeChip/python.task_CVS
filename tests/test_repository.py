@@ -11,11 +11,8 @@ class TestRepository(unittest.TestCase):
     def setUp(self) -> None:
         self.di = DirectoryInfo()
         path = os.path.join(os.getenv('APPDATA'), 'TESTING')
-        self.di.set_custom_path(path)
-        self.di.init()
+        self.di.init(path)
         self.di.add_branch_path('master')
-        if not os.path.exists(path):
-            os.makedirs(path)
         self.file_path = os.path.join(self.di.working_path, 'TESTING.txt')
         with open(self.file_path, "w+") as file:
             file.write('SOME STRING')

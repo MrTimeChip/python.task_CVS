@@ -12,10 +12,7 @@ class WorkingDirectoryTest(unittest.TestCase):
         self.wd = WorkingDirectory()
         self.di = DirectoryInfo()
         path = os.path.join(os.getenv('APPDATA'), 'TESTING')
-        self.di.set_custom_path(path)
-        self.di.init()
-        if not os.path.exists(path):
-            os.makedirs(path)
+        self.di.init(path)
         self.file_path = os.path.join(self.di.working_path, 'TESTING.txt')
         with open(self.file_path, "w+") as file:
             file.write('SOME STRING')

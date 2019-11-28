@@ -12,10 +12,10 @@ class CVS:
         self.working_directory = WorkingDirectory()
         self.directory = DirectoryInfo()
 
-    def init(self):
+    def init(self, path):
         """Initializes new repository at current directory"""
         self.repository.init()
-        self.directory.init()
+        self.directory.init(path)
         self.index.set_directory_info(self.directory)
         self.repository.set_directory_info(self.directory)
         self.working_directory.find_not_indexed_files(self.index.indexed_files)
