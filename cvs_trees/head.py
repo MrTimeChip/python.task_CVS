@@ -16,5 +16,5 @@ class Head:
 
     def reset(self):
         """Moves head to previous commit"""
-        res_commit = self.__current_branch.get_current_commit().previous_commit
-        self.__current_branch.set_current_commit(res_commit)
+        res_commit = self.__current_branch.current_commit.previous_commit
+        self.__current_branch.current_commit = res_commit
