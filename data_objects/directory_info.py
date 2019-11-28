@@ -23,7 +23,7 @@ class DirectoryInfo:
         """Initializes paths"""
         self.working_path = path
         if not os.path.exists(path):
-            raise ValueError(f'No such path found! {path}')
+            os.makedirs(path)
         cvs_path_base = os.path.join(os.getenv('APPDATA'))
         self.cvs_path = os.path.join(cvs_path_base, "CVS")
         if not os.path.exists(self.cvs_path):
