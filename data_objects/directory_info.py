@@ -38,8 +38,12 @@ class DirectoryInfo:
         """Adds branch to paths"""
         path_to_branch = os.path.join(self.cvs_path, branch_name)
         self.__branches_paths[branch_name] = path_to_branch
+        if not os.path.exists(path_to_branch):
+            os.makedirs(path_to_branch)
         path_to_commits = os.path.join(self.cvs_path,
                                        branch_name + "\\COMMITS")
+        if not os.path.exists(path_to_commits):
+            os.makedirs(path_to_commits)
         self.__branches_commits_paths[branch_name] = path_to_commits
 
     def get_branch_path(self, branch_name) -> str:
