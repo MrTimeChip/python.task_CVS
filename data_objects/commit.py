@@ -1,3 +1,4 @@
+import copy
 import hashlib
 import os
 import uuid
@@ -9,21 +10,33 @@ class Commit:
 
     def __init__(self, commit_message):
         self.commit_message = commit_message
-        self.files = set()
-        self.files_with_copying_paths = {}
-        self.files_hashes = {}
+        self.__files = set()
+        self.__files_with_copying_paths = {}
+        self.__files_hashes = {}
         self.previous_commit = None
-        self.commit_number = str(uuid.uuid4())
+        self.__commit_number = str(uuid.uuid4())
+        
+    @property
+    def files(self):
+        return copy.copy(self.__files)
+
+    @property
+    def files_with_copying_paths(self):
+        return copy.copy(self.__files_with_copying_paths)
+
+    @property
+    def files_hashes(self):
+        return copy.copy(self.__files_hashes)
 
     def freeze_files(self, indexed_files, directory_info: DirectoryInfo):
-        """Freezes indexed files, making hashes amd remembering their paths"""
+        """Freezes indexed files making hashes amd remembering their paths"""
         index_path = directory_info.index_path
-        self.files = indexed_files
+        self.__files = indexed_files
         for filename in indexed_files:
             file_path = os.path.join(index_path, filename)
             file_hash = hashlib.md5(open(file_path, 'rb').read()).hexdigest()
-            self.files_with_copying_paths[filename] = file_path
-            self.files_hashes[file_path] = file_hash
+            self.__files_with_copying_paths[filename] = file_path
+            self.__files_hashes[file_path] = file_hash
 
     def set_previous_commit(self, commit):
         """Sets previous commit"""
@@ -36,19 +49,16 @@ class Commit:
         """
         return self.previous_commit
 
-    def get_commit_number(self):
+    @property
+    def commit_number(self):
         """Returns commit number"""
-        return self.commit_number
-
-    def get_copying_paths(self):
-        """Returns copying paths"""
-        return self.files_with_copying_paths
+        return self.__commit_number
 
     def print_info(self):
         """Prints commit history, starting from this commit"""
         print(self.commit_number + '\n')
         print(self.commit_message + '\n')
-        for file, hashcode in self.files_hashes:
+        for file, hashcode in self.__files_hashes:
             print(f'{hashcode} {file} \n')
         print("")
         if self.previous_commit is not None:
