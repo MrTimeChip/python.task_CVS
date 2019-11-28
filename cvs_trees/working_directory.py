@@ -30,8 +30,10 @@ class WorkingDirectory:
 
     def reset(self, index: Index):
         """Rewrites file in current working __directory"""
+        print('Working directory reset')
         for filename in index.indexed_files:
             file_indexed = os.path.join(self.__directory.index_path, filename)
             file_origin = os.path.join(self.__directory.working_path, filename)
             copyfile(file_indexed, file_origin)
+            print(f'Copied file from {file_indexed} to {file_origin}')
 
