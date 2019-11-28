@@ -1,3 +1,4 @@
+import os
 import unittest
 
 from data_objects.directory_info import DirectoryInfo
@@ -45,6 +46,12 @@ class DirectoryInfoTest(unittest.TestCase):
         self.info.add_branch_path("master")
         path = self.info.get_commits_path("master")
         self.assertTrue(path.endswith("CVS\\master\\COMMITS"))
+
+    def test_set_custom_path_should_set_custom_working_path(self):
+        self.info.set_custom_path(os.getenv('APPDATA'))
+        self.info.init()
+        path = self.info.working_path
+        self.assertEquals(path, os.getenv('APPDATA'))
 
 
 if __name__ == '__main__':
