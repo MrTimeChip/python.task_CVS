@@ -8,7 +8,7 @@ from cvs import CVS
 class TestCVS(unittest.TestCase):
     def setUp(self) -> None:
         self.cvs = CVS()
-        self.path = os.path.join(os.getenv('APPDATA'), 'TESTING')
+        self.path = os.path.join(os.getcwd(), 'TESTING')
         self.file_path = os.path.join(self.path, 'TESTING.txt')
         with open(self.file_path, "w+") as file:
             file.write('SOME STRING')

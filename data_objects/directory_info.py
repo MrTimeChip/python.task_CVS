@@ -24,8 +24,7 @@ class DirectoryInfo:
         self.working_path = path
         if not os.path.exists(path):
             os.makedirs(path)
-        cvs_path_base = os.path.join(os.getenv('APPDATA'))
-        self.cvs_path = os.path.join(cvs_path_base, "CVS")
+        self.cvs_path = os.path.join(self.working_path, ".CVS")
         if not os.path.exists(self.cvs_path):
             os.makedirs(self.cvs_path)
         self.index_path = os.path.join(self.cvs_path, "INDEX")
@@ -38,8 +37,7 @@ class DirectoryInfo:
         self.__branches_paths[branch_name] = path_to_branch
         if not os.path.exists(path_to_branch):
             os.makedirs(path_to_branch)
-        path_to_commits = os.path.join(self.cvs_path,
-                                       branch_name + "\\COMMITS")
+        path_to_commits = os.path.join(self.cvs_path, branch_name, "COMMITS")
         if not os.path.exists(path_to_commits):
             os.makedirs(path_to_commits)
         self.__branches_commits_paths[branch_name] = path_to_commits

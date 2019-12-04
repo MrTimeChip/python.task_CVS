@@ -10,7 +10,7 @@ from data_objects.repostitory import Repository
 class TestRepository(unittest.TestCase):
     def setUp(self) -> None:
         self.di = DirectoryInfo()
-        path = os.path.join(os.getenv('APPDATA'), 'TESTING')
+        path = os.path.join(os.getcwd(), 'TESTING')
         self.di.init(path)
         self.di.add_branch_path('master')
         self.file_path = os.path.join(self.di.working_path, 'TESTING.txt')
