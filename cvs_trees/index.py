@@ -51,6 +51,7 @@ class Index:
         commit = Commit(commit_message)
         commit.freeze_files(self.__indexed_files, self.__directory)
         self.__last_commit = commit
+        self.__indexed_files = set()
         return commit
 
     def reset(self, head: Head):

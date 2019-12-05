@@ -30,6 +30,9 @@ class CVS:
 
     def commit(self, commit_message):
         """Makes new commit"""
+        if len(self.index.indexed_files) == 0:
+            print('No changes detected!')
+            return
         commit = self.index.make_commit(commit_message)
         self.repository.add_commit(commit)
         self.repository.point_to_last_commit()
