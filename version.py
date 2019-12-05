@@ -1,50 +1,81 @@
+import sys
+
 from cvs import CVS
+import argparse
+
+
+def create_parser():
+    parser = argparse.ArgumentParser(description=
+                                     'Git-like version control system.',
+                                     epilog=
+                                     '(c) Danil Pankov 2019. '
+                                     'CS-201 study project.')
+    subparsers = parser.add_subparsers(
+        dest='command',
+        title='Available commands.',
+        description='Commands to pass as first parameter.')
+
+    init_parser = subparsers.add_parser(
+        'init',
+        help='Initialize VCS at certain directory.',
+        description='Initializes working directories for VCS (.CVS).')
+    init_parser.add_argument(
+        'directory',
+        help='Directory where cvs will look for files.')
+
+    add_parser = subparsers.add_parser(
+        'add',
+        help='Add file to current commit.',
+        description='Current state will be saved and added to current commit.')
+    add_parser.add_argument(
+        'filename',
+        help='File to add to current commit.',
+        type=argparse.FileType())
+
+    commit_parser = subparsers.add_parser(
+        'commit',
+        help='Save current changes and make a commit.',
+        description='Save current changes and make a commit.'
+                    'Commit will be saved at the repository.')
+    commit_parser.add_argument(
+        'commit_message',
+        help='Commit message.')
+
+    reset_parser = subparsers.add_parser(
+        'reset',
+        help='Reset current CVS state.',
+        description='Resets CVS state. '
+                    'Takes info from last versions from repository.')
+    reset_parser.add_argument(
+        'type',
+        choices=['--soft', '--mixed', '--hard'],
+        default='--mixed',
+        help='Reset types. Warning! --hard will overwrite your files!')
+
+    subparsers.add_parser(
+        'log',
+        help='Show commit history.',
+        description='Shows commits, starting from last.')
+
+    return parser
 
 
 def main():  # pragma: no cover
     cvs = CVS()
-    commands = {'init': cvs.init,
-                'add': cvs.add,
-                'commit': cvs.commit,
-                'reset': cvs.reset,
-                'log': cvs.log,
-                '-h': print_help,
-                '--help': print_help}
-    while True:
-        user_input = input()
-        arguments = user_input.split()
-        command = arguments[0]
-        if command not in commands.keys():
-            print(f'Wrong command! {command}')
-            continue
-        if len(arguments) > 1:
-            key = arguments[1]
-            commands[command](key)
-        else:
-            commands[command]()
-
-
-def print_help():
-    print('This is a cvs-like version control system.')
-    print('Commands are:')
-    print('\tinit [path] - set new working directory at path')
-    print('\t\tCurrent execution path if none')
-    print('')
-    print('\tadd filename - add new file to repository')
-    print('\t\tSystem will remember added file state')
-    print('\t\tShould be used after any changes to file')
-    print('')
-    print('\tcommit commit_message - make new commit')
-    print('\t\tSaves current added files state at the repository')
-    print('')
-    print('\treset [--soft, --mixed, --hard] - resets repository state')
-    print('\t\t--soft - resets last commit to previous at repository')
-    print('\t\t--mixed - --soft and changed files are ones from last commit')
-    print('\t\t--hard - --mixed and replaces files at the working directory')
-    print('\t\t\twith files of the last commit')
-    print('')
-    print('\tlog - prints commits history')
-    print('')
+    parser = create_parser()
+    namespace = parser.parse_args(sys.argv[1:])
+    if namespace.command == 'init':
+        cvs.init(namespace.directory)
+    if namespace.command == 'commit':
+        cvs.commit(namespace.commit_message)
+    if namespace.command == 'reset':
+        cvs.reset(namespace.type)
+    if namespace.command == 'add':
+        cvs.add(namespace.filename)
+    if namespace.command == 'log':
+        cvs.log()
+    else:
+        parser.print_help()
 
 
 if __name__ == "__main__":
