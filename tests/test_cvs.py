@@ -3,6 +3,7 @@ import shutil
 import unittest
 
 from cvs import CVS
+from data_objects.commit import Commit
 
 
 class TestCVS(unittest.TestCase):
@@ -33,8 +34,8 @@ class TestCVS(unittest.TestCase):
         self.cvs.init(self.path)
         self.cvs.add('TESTING.txt')
         self.cvs.commit('New commit')
-        self.assertEqual('New commit',
-                         self.cvs.repository.last_commit.commit_message)
+        self.assertNotEqual('NONE',
+                            self.cvs.repository.last_commit)
 
     def test_reset_should_make_soft_reset(self):
         self.cvs.init(self.path)

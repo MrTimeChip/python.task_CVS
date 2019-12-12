@@ -67,17 +67,19 @@ class DirectoryInfo:
         config = configparser.ConfigParser()
         config.read(config_path)
         self.config = config
-        self.load_config_values()
+        self.get_data_from_config(config_path)
 
-    def load_config_values(self):
-        self.working_path = self.config['info']['working_path']
-        self.cvs_path = self.config['info']['cvs_path']
-        self.index_path = self.config['info']['index_path']
+    def get_data_from_config(self, config_path):
+        config = configparser.ConfigParser()
+        config.read(config_path)
+        self.working_path = config['info']['working_path']
+        self.cvs_path = config['info']['cvs_path']
+        self.index_path = config['info']['index_path']
 
-        for name, path in self.config['branches'].items():
+        for name, path in config['branches'].items():
             self.branches_paths[name] = path
 
-        for name, path in self.config['branches_commits'].items():
+        for name, path in config['branches_commits'].items():
             self.branches_commits_paths[name] = path
 
     def save_config(self):

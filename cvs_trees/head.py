@@ -1,4 +1,5 @@
 from data_objects.branch import Branch
+from data_objects.commit import Commit
 
 
 class Head:
@@ -16,7 +17,9 @@ class Head:
 
     def reset(self):
         """Moves head to previous commit"""
-        res_commit = self.__current_branch.current_commit.previous_commit
+        previous = self.__current_branch.current_commit.get_previous_commit()
+        res_commit = Commit.make_commit_from_config(previous.commit_number,
+                                                    self.current_branch.name)
         self.__current_branch.current_commit = res_commit
         commit_number = res_commit.commit_number
         commit_message = res_commit.commit_message

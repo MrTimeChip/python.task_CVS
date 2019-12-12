@@ -43,12 +43,13 @@ class Index:
         return os.path.exists(os.path.join(self.__directory.working_path,
                                            filename))
 
-    def make_commit(self, commit_message) -> Commit:
+    def make_commit(self, commit_message, branch_name) -> Commit:
         """
         Makes commit, freezing current files state
         :returns Commit
         """
         commit = Commit(commit_message)
+        commit.branch_name = branch_name
         commit.freeze_files(self.__indexed_files, self.__directory)
         self.__last_commit = commit
         self.__indexed_files = set()

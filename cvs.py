@@ -33,7 +33,8 @@ class CVS:
         if len(self.index.indexed_files) == 0:
             print('No changes detected!')
             return
-        commit = self.index.make_commit(commit_message)
+        branch_name = self.repository.current_branch.name
+        commit = self.index.make_commit(commit_message, branch_name)
         self.repository.add_commit(commit)
         self.repository.point_to_last_commit()
 
