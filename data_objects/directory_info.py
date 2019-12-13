@@ -69,12 +69,15 @@ class DirectoryInfo:
         config_path = os.path.join(cwd, '.CVS', 'di.ini')
         config = configparser.ConfigParser()
         config.read(config_path)
+        config.optionxform = str
         self.config = config
         self.get_data_from_config(config_path)
 
     def get_data_from_config(self, config_path):
         config = configparser.ConfigParser()
         config.read(config_path)
+        config.optionxform = str
+
         self.working_path = config['info']['working_path']
         self.cvs_path = config['info']['cvs_path']
         self.index_path = config['info']['index_path']

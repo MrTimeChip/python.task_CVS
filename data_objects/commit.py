@@ -54,6 +54,11 @@ class Commit:
         self.config['info']['previous'] = commit
         self.save_config()
 
+    def get_previous_commit_number(self):
+        """Sets previous commit"""
+        self.load_config()
+        return self.config['info']['previous']
+
     def get_previous_commit(self):
         """
         Returns previous commit

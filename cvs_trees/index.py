@@ -1,3 +1,4 @@
+import configparser
 import copy
 import os
 from shutil import copyfile
@@ -13,6 +14,8 @@ class Index:
         self.__indexed_files = set()
         self.__last_commit = None
         self.__directory = DirectoryInfo()
+        self.config = configparser.ConfigParser()
+        self.init_config()
 
     @property
     def indexed_files(self):
@@ -28,15 +31,19 @@ class Index:
 
     def add_new_file(self, filename):
         """Adds new file, copying it to /CVS/INDEX/..."""
+        self.load_config()
         if not self.__is_file_in_working_directory(filename):
-            raise FileNotFoundError("No such file in file __directory!")
+            path = os.path.join(self.__directory.working_path,
+                                filename)
+            raise FileNotFoundError(f"No such file '{filename}' in '{path}'!")
         self.__indexed_files.add(filename)
-        if not os.path.exists(self.__directory.index_path):
-            os.makedirs(self.__directory.index_path)
+        files = self.config['info']['files']
+        self.config['info']['files'] = f'{files},{filename}'.strip(',')
         source_file = os.path.join(self.__directory.working_path, filename)
         file_copy = os.path.join(self.__directory.index_path, filename)
         copyfile(source_file, file_copy)
         print(f'File {source_file} added')
+        self.save_config()
 
     def __is_file_in_working_directory(self, filename) -> bool:
         """Checks if file is in working __directory"""
@@ -48,15 +55,20 @@ class Index:
         Makes commit, freezing current files state
         :returns Commit
         """
+        self.load_config()
         commit = Commit(commit_message)
         commit.branch_name = branch_name
         commit.freeze_files(self.__indexed_files, self.__directory)
         self.__last_commit = commit
-        self.__indexed_files = set()
+        self.config['info']['files'] = ''
+        self.config['info']['last_commit'] = commit.commit_number
+        self.config['info']['last_commit_branch'] = commit.branch_name
+        self.save_config()
         return commit
 
     def reset(self, head: Head):
         """Resets index to last commit that head is pointing to"""
+        self.load_config()
         commit = head.current_branch.current_commit
         print('Index reset')
         for file in commit.files:
@@ -68,4 +80,58 @@ class Index:
             copyfile(source_path, copy_path)
             print(f'Copied file from {source_path} to {copy_path}')
         self.__indexed_files = commit.files
+        conf_files = ''
+        for file in commit.files:
+            conf_files += file
+        self.config['info']['files'] = conf_files.strip(',')
         self.__last_commit = commit
+        self.config['info']['last_commit'] = commit.commit_number
+        self.config['info']['last_commit_branch'] = commit.branch_name
+        self.save_config()
+
+    def load_config(self):
+        di = DirectoryInfo()
+        di.init(os.getcwd())
+        config_path = os.path.join(di.index_path, 'index.ini')
+        config = configparser.ConfigParser()
+        config.read(config_path)
+        config.optionxform = str
+        self.config = config
+        self.get_data_from_config(config_path)
+
+    def get_data_from_config(self, config_path):
+        config = configparser.ConfigParser()
+        config.read(config_path)
+        config.optionxform = str
+
+        prev_commit_number = self.config['info']['last_commit']
+        prev_commit_branch = self.config['info']['last_commit_branch']
+        if prev_commit_number != 'None':
+            commit = Commit.make_commit_from_config(prev_commit_number,
+                                                    prev_commit_branch)
+        else:
+            commit = 'None'
+        self.__last_commit = commit
+        files = config['info']['files']
+        if files != '':
+            self.__indexed_files = set(files.split(','))
+
+    def save_config(self):
+        di = DirectoryInfo()
+        di.init(os.getcwd())
+        config_path = os.path.join(di.index_path, 'index.ini')
+        with open(config_path, 'w') as f:
+            self.config.write(f)
+
+    def init_config(self):
+        di = DirectoryInfo()
+        di.init(os.getcwd())
+        path = os.path.join(di.index_path, 'index.ini')
+
+        config = configparser.ConfigParser()
+        config['info'] = {}
+        config['info']['last_commit'] = 'None'
+        config['info']['last_commit_branch'] = 'None'
+        config['info']['files'] = ''
+        with open(path, 'w') as cfg_file:
+            config.write(cfg_file)
