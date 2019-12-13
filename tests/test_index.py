@@ -24,6 +24,8 @@ class TestIndex(unittest.TestCase):
     def tearDown(self) -> None:
         if os.path.exists(self.di.cvs_path):
             shutil.rmtree(self.di.cvs_path)
+        if os.path.exists(self.file_path):
+            os.remove(self.file_path)
 
     def test_add_new_file_raises_file_not_found_error_when_no_such_file(self):
         with self.assertRaises(FileNotFoundError):
@@ -42,19 +44,21 @@ class TestIndex(unittest.TestCase):
 
     def test_make_commit_should_return_new_commit(self):
         self.index.add_new_file('TESTING.txt')
-        commit = self.index.make_commit("new commit")
+        commit = self.index.make_commit("new commit", 'master')
         self.assertIsNotNone(commit)
 
     def test_make_commit_should_set_last_commit(self):
         self.assertIsNone(self.index.last_commit)
         self.index.add_new_file('TESTING.txt')
-        self.index.make_commit("new commit")
+        self.index.make_commit("new commit", 'master')
         self.assertIsNotNone(self.index.last_commit)
 
     def test_reset_should_reset_to_head_commit(self):
         head = Head()
         head.current_branch = Branch('master')
         commit = Commit('test')
+        commit.branch_name = 'master'
+        commit.init_config()
         head.current_branch.current_commit = commit
         self.index.reset(head)
         self.assertEqual(self.index.last_commit, commit)

@@ -10,7 +10,7 @@ from data_objects.repostitory import Repository
 class TestRepository(unittest.TestCase):
     def setUp(self) -> None:
         self.di = DirectoryInfo()
-        path = os.path.join(os.getcwd(), 'TESTING')
+        path = os.getcwd()
         self.di.init(path)
         self.di.add_branch_path('master')
         self.file_path = os.path.join(self.di.working_path, 'TESTING.txt')
@@ -23,12 +23,14 @@ class TestRepository(unittest.TestCase):
     def tearDown(self) -> None:
         if os.path.exists(self.di.cvs_path):
             shutil.rmtree(self.di.cvs_path)
+        if os.path.exists(self.file_path):
+            os.remove(self.file_path)
 
     def test_add_commit__should_copy_commit_files(self):
         index = Index()
         index.set_directory_info(self.di)
         index.add_new_file('TESTING.txt')
-        commit = index.make_commit('Testing commit')
+        commit = index.make_commit('Testing commit', 'master')
         self.rep.add_commit(commit)
         commits_path = self.di.get_commits_path('master')
         commit_path = os.path.join(commits_path, commit.commit_number)

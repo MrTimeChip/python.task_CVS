@@ -21,6 +21,8 @@ class WorkingDirectoryTest(unittest.TestCase):
     def tearDown(self) -> None:
         if os.path.exists(self.di.cvs_path):
             shutil.rmtree(self.di.cvs_path)
+        if os.path.exists(self.file_path):
+            os.remove(self.file_path)
 
     def test_find_not_indexed_files_should_find_when_empty_indexed(self):
         self.wd.find_not_indexed_files(set())

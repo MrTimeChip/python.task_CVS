@@ -24,6 +24,8 @@ class TestCommit(unittest.TestCase):
     def tearDown(self) -> None:
         if os.path.exists(self.di.cvs_path):
             shutil.rmtree(self.di.cvs_path)
+        if os.path.exists(self.file_path):
+            os.remove(self.file_path)
 
     def test_freeze_files_should_remember_copy_path_of_indexed_files(self):
         index = Index()
