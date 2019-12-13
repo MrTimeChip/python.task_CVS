@@ -11,7 +11,7 @@ class WorkingDirectoryTest(unittest.TestCase):
     def setUp(self) -> None:
         self.wd = WorkingDirectory()
         self.di = DirectoryInfo()
-        path = os.path.join(os.getcwd(), 'TESTING')
+        path = os.getcwd()
         self.di.init(path)
         self.file_path = os.path.join(self.di.working_path, 'TESTING.txt')
         with open(self.file_path, "w+") as file:

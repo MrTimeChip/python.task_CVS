@@ -14,7 +14,7 @@ class TestCommit(unittest.TestCase):
         self.commit = Commit("NONE")
         self.wd = WorkingDirectory()
         self.di = DirectoryInfo()
-        path = os.path.join(os.getcwd(), 'TESTING')
+        path = os.getcwd()
         self.di.init(path)
         self.file_path = os.path.join(self.di.working_path, 'TESTING.txt')
         with open(self.file_path, "w+") as file:
@@ -29,6 +29,7 @@ class TestCommit(unittest.TestCase):
         index = Index()
         index.set_directory_info(self.di)
         index.add_new_file('TESTING.txt')
+        self.commit.branch_name = 'master'
         self.commit.freeze_files(index.indexed_files, self.di)
         keys = self.commit.files_with_copying_paths.keys()
         self.assertTrue('TESTING.txt' in keys)
@@ -37,10 +38,10 @@ class TestCommit(unittest.TestCase):
         index = Index()
         index.set_directory_info(self.di)
         index.add_new_file('TESTING.txt')
+        self.commit.branch_name = 'master'
         self.commit.freeze_files(index.indexed_files, self.di)
-        path = self.commit.files_with_copying_paths['TESTING.txt']
         keys = self.commit.files_hashes.keys()
-        self.assertTrue(path in keys)
+        self.assertTrue('TESTING.txt' in keys)
 
     def test_commit_number_should_return_unique_commit_number(self):
         first_number = self.commit.commit_number

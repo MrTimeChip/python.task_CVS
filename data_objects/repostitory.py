@@ -11,7 +11,7 @@ class Repository:
 
     def __init__(self):
         self.current_branch = Branch("NONE")
-        self.last_commit = "NONE"
+        self.last_commit_number = "NONE"
         self.head = Head()
         self.directory = DirectoryInfo()
 
@@ -32,8 +32,8 @@ class Repository:
             copyfile(path, copy_path)
             file_hash = commit.files_hashes[file]
             print(f'File {file} saved - {file_hash}')
-        commit.set_previous_commit(self.last_commit)
-        self.last_commit = commit.commit_number
+        commit.set_previous_commit_number(self.last_commit_number)
+        self.last_commit_number = commit.commit_number
         self.current_branch.set_current_commit(commit)
 
     def reset_head(self):
@@ -42,9 +42,9 @@ class Repository:
 
     def point_to_last_commit(self):
         """Points to last commit"""
-        last_commit = Commit.make_commit_from_config(self.last_commit,
+        last_commit_number = Commit.make_commit_from_config(self.last_commit_number,
                                                      self.current_branch.name)
-        self.current_branch.set_current_commit(last_commit)
+        self.current_branch.set_current_commit(last_commit_number)
 
     def init(self):
         """Initializes repository with master branch"""
@@ -54,4 +54,4 @@ class Repository:
 
     def get_commit_history(self):
         print('sss')
-        #self.last_commit.print_info()
+        #self.last_commit_number.print_info()

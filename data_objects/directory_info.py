@@ -33,18 +33,21 @@ class DirectoryInfo:
         if not os.path.exists(self.index_path):
             os.makedirs(self.index_path)
         self.init_config()
+        self.add_branch_path('master')
 
     def add_branch_path(self, branch_name):
         """Adds branch to paths"""
         self.load_config()
         path_to_branch = os.path.join(self.cvs_path, branch_name)
         self.config['branches'][branch_name] = path_to_branch
+        self.__branches_paths[branch_name] = path_to_branch
         if not os.path.exists(path_to_branch):
             os.makedirs(path_to_branch)
         path_to_commits = os.path.join(self.cvs_path, branch_name, "COMMITS")
         if not os.path.exists(path_to_commits):
             os.makedirs(path_to_commits)
         self.config['branches_commits'][branch_name] = path_to_commits
+        self.__branches_commits_paths[branch_name] = path_to_commits
         self.save_config()
 
     def get_branch_path(self, branch_name) -> str:
@@ -77,10 +80,10 @@ class DirectoryInfo:
         self.index_path = config['info']['index_path']
 
         for name, path in config['branches'].items():
-            self.branches_paths[name] = path
+            self.__branches_paths[name] = path
 
         for name, path in config['branches_commits'].items():
-            self.branches_commits_paths[name] = path
+            self.__branches_commits_paths[name] = path
 
     def save_config(self):
         config_path = os.path.join(self.cvs_path, 'di.ini')

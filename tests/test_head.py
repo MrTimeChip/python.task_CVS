@@ -11,6 +11,7 @@ class TestHead(unittest.TestCase):
         head = Head()
         head.current_branch = Branch('master')
         commit = Commit('first')
+        commit.branch_name = 'master'
         commit.previous_commit = Commit('second')
         head.current_branch.current_commit = commit
         head.reset()

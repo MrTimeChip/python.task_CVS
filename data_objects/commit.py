@@ -16,7 +16,7 @@ class Commit:
         self.__files = set()
         self.__files_with_copying_paths = {}
         self.__files_hashes = {}
-        self.previous_commit = 'NONE'
+        self.previous_commit_number = 'NONE'
         self.__commit_number = str(uuid.uuid4())
 
     @property
@@ -48,7 +48,7 @@ class Commit:
         self.save_config()
         self.load_config()
 
-    def set_previous_commit(self, commit: str):
+    def set_previous_commit_number(self, commit: str):
         """Sets previous commit"""
         self.load_config()
         self.config['info']['previous'] = commit
@@ -60,7 +60,7 @@ class Commit:
         :return: previous commit
         """
         self.load_config()
-        commit = self.make_commit_from_config(self.previous_commit,
+        commit = self.make_commit_from_config(self.previous_commit_number,
                                               self.branch_name)
         return commit
 
@@ -74,6 +74,7 @@ class Commit:
         commits = di.get_commits_path(self.branch_name)
         path = os.path.join(commits, self.commit_number, 'commit.ini')
         config = configparser.ConfigParser()
+        config.optionxform = str
         config.read(path)
         self.config = config
         self.get_data_from_config(path)
@@ -98,7 +99,7 @@ class Commit:
         config['info']['branch'] = self.branch_name
         config['info']['message'] = self.commit_message
         config['info']['number'] = self.commit_number
-        config['info']['previous'] = self.previous_commit
+        config['info']['previous'] = self.previous_commit_number
         config['copy'] = {}
         for file, file_path in self.__files_with_copying_paths.items():
             config['copy'][file] = file_path
@@ -111,12 +112,13 @@ class Commit:
 
     def get_data_from_config(self, config_path):
         config = configparser.ConfigParser()
+        config.optionxform = str
         config.read(config_path)
 
         self.commit_message = config['info']['message']
         self.branch_name = config['info']['branch']
 
-        self.previous_commit = config['info']['previous']
+        self.previous_commit_number = config['info']['previous']
         self.__commit_number = config['info']['number']
 
         self.__files = set()

@@ -7,7 +7,7 @@ from data_objects.directory_info import DirectoryInfo
 class DirectoryInfoTest(unittest.TestCase):
     def setUp(self) -> None:
         self.info = DirectoryInfo()
-        self.info.init(os.path.join(os.getcwd(), 'TESTING'))
+        self.info.init(os.getcwd())
 
     def test_init_should_initialize_working_path(self):
         result = self.info.working_path
