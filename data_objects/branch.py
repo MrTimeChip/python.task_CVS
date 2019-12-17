@@ -35,6 +35,15 @@ class Branch:
         self.config = config
         self.get_data_from_config(config_path)
 
+    @staticmethod
+    def make_branch_from_config(branch_name):
+        di = DirectoryInfo()
+        branch_path = di.get_branch_path(branch_name)
+        path = os.path.join(branch_path, 'branch.ini')
+        branch = Branch(branch_name)
+        branch.get_data_from_config(path)
+        return branch
+
     def get_data_from_config(self, config_path):
         config = configparser.ConfigParser()
         config.read(config_path)
