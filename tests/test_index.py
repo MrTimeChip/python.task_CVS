@@ -13,6 +13,7 @@ class TestIndex(unittest.TestCase):
 
     def setUp(self) -> None:
         self.index = Index()
+        self.index.init_config()
         self.di = DirectoryInfo()
         path = os.getcwd()
         self.di.init(path)

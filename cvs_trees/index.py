@@ -15,7 +15,6 @@ class Index:
         self.__last_commit = None
         self.__directory = DirectoryInfo()
         self.config = configparser.ConfigParser()
-        self.init_config()
 
     @property
     def indexed_files(self):

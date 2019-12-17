@@ -12,8 +12,6 @@ class Branch:
         self.current_commit_number = None
         self.config = configparser.ConfigParser()
 
-        self.init_config()
-
     def set_current_commit(self, commit):
         """Sets current commit"""
         self.current_commit_number = commit.commit_number

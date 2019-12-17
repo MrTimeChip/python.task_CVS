@@ -35,6 +35,7 @@ class WorkingDirectoryTest(unittest.TestCase):
 
     def test_reset_should_rewrite_files_from_index(self):
         index = Index()
+        index.init_config()
         index.set_directory_info(self.di)
         index.add_new_file('TESTING.txt')
         os.remove(self.file_path)

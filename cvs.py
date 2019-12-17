@@ -14,6 +14,7 @@ class CVS:
 
     def init(self, path):
         """Initializes new repository at given path"""
+        self.index.init_config()
         self.index.set_directory_info(self.directory)
         self.repository.set_directory_info(self.directory)
         self.working_directory.set_directory_info(self.directory)

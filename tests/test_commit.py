@@ -29,6 +29,7 @@ class TestCommit(unittest.TestCase):
 
     def test_freeze_files_should_remember_copy_path_of_indexed_files(self):
         index = Index()
+        index.init_config()
         index.set_directory_info(self.di)
         index.add_new_file('TESTING.txt')
         self.commit.branch_name = 'master'
@@ -38,6 +39,7 @@ class TestCommit(unittest.TestCase):
 
     def test_freeze_files_should_make_hash_from_indexed_files(self):
         index = Index()
+        index.init_config()
         index.set_directory_info(self.di)
         index.add_new_file('TESTING.txt')
         self.commit.branch_name = 'master'

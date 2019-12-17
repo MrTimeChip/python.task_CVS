@@ -28,6 +28,7 @@ class TestRepository(unittest.TestCase):
 
     def test_add_commit__should_copy_commit_files(self):
         index = Index()
+        index.init_config()
         index.set_directory_info(self.di)
         index.add_new_file('TESTING.txt')
         commit = index.make_commit('Testing commit', 'master')

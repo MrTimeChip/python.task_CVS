@@ -49,6 +49,7 @@ class Repository:
     def init(self):
         """Initializes repository with master branch"""
         self.current_branch = Branch('master')
+        self.current_branch.init_config()
         self.directory.add_branch_path('master')
         self.head.current_branch = self.current_branch
 
