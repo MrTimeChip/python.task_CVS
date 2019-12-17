@@ -5,7 +5,7 @@ from data_objects.commit import Commit
 class Head:
 
     def __init__(self):
-        self.__current_branch = Branch("NONE")
+        self.__current_branch = Branch("master")
 
     @property
     def current_branch(self):
