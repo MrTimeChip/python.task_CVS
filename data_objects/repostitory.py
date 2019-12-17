@@ -10,7 +10,7 @@ from data_objects.directory_info import DirectoryInfo
 class Repository:
 
     def __init__(self):
-        self.current_branch = Branch("master")
+        self.current_branch = None
         self.last_commit_number = "NONE"
         self.head = Head()
         self.directory = DirectoryInfo()
