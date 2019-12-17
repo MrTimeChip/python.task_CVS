@@ -56,13 +56,17 @@ class TestIndex(unittest.TestCase):
 
     def test_reset_should_reset_to_head_commit(self):
         head = Head()
-        head.current_branch = Branch('master')
+        head.init_config()
+        branch = Branch('master')
+        branch.init_config()
+        head.current_branch = branch
         commit = Commit('test')
         commit.branch_name = 'master'
         commit.init_config()
-        head.current_branch.current_commit = commit
+        head.current_branch.set_current_commit(commit)
         self.index.reset(head)
-        self.assertEqual(self.index.last_commit, commit)
+        self.assertEqual(self.index.last_commit.commit_number,
+                         commit.commit_number)
 
 
 if __name__ == '__main__':

@@ -68,7 +68,7 @@ class Index:
     def reset(self, head: Head):
         """Resets index to last commit that head is pointing to"""
         self.load_config()
-        commit = head.current_branch.current_commit
+        commit = head.current_branch.get_current_commit()
         print('Index reset')
         for file in commit.files:
             branch_name = head.current_branch.name

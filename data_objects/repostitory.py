@@ -51,6 +51,7 @@ class Repository:
         self.current_branch = Branch('master')
         self.current_branch.init_config()
         self.directory.add_branch_path('master')
+        self.head.init_config()
         self.head.current_branch = self.current_branch
 
     def get_commit_history(self):

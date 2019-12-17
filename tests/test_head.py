@@ -13,7 +13,10 @@ class TestHead(unittest.TestCase):
         di = DirectoryInfo()
         di.init(os.getcwd())
         head = Head()
-        head.current_branch = Branch('master')
+        head.init_config()
+        branch = Branch('master')
+        branch.init_config()
+        head.current_branch = branch
         commit = Commit('first')
         commit.branch_name = 'master'
         commit.init_config()

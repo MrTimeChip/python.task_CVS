@@ -8,10 +8,15 @@ class DirectoryInfo:
     def __init__(self):
         self.config = None
         self.working_path = ""
-        self.cvs_path = ""
+        self.__cvs_path = ""
         self.index_path = ""
         self.__branches_commits_paths = {}
         self.__branches_paths = {}
+    
+    @property
+    def cvs_path(self):
+        self.load_config()
+        return self.__cvs_path
 
     @property
     def branches_paths(self):
@@ -26,10 +31,10 @@ class DirectoryInfo:
         self.working_path = path
         if not os.path.exists(path):
             os.makedirs(path)
-        self.cvs_path = os.path.join(self.working_path, ".CVS")
-        if not os.path.exists(self.cvs_path):
-            os.makedirs(self.cvs_path)
-        self.index_path = os.path.join(self.cvs_path, "INDEX")
+        self.__cvs_path = os.path.join(self.working_path, ".CVS")
+        if not os.path.exists(self.__cvs_path):
+            os.makedirs(self.__cvs_path)
+        self.index_path = os.path.join(self.__cvs_path, "INDEX")
         if not os.path.exists(self.index_path):
             os.makedirs(self.index_path)
         self.init_config()
@@ -38,12 +43,12 @@ class DirectoryInfo:
     def add_branch_path(self, branch_name):
         """Adds branch to paths"""
         self.load_config()
-        path_to_branch = os.path.join(self.cvs_path, branch_name)
+        path_to_branch = os.path.join(self.__cvs_path, branch_name)
         self.config['branches'][branch_name] = path_to_branch
         self.__branches_paths[branch_name] = path_to_branch
         if not os.path.exists(path_to_branch):
             os.makedirs(path_to_branch)
-        path_to_commits = os.path.join(self.cvs_path, branch_name, "COMMITS")
+        path_to_commits = os.path.join(self.__cvs_path, branch_name, "COMMITS")
         if not os.path.exists(path_to_commits):
             os.makedirs(path_to_commits)
         self.config['branches_commits'][branch_name] = path_to_commits
@@ -79,7 +84,7 @@ class DirectoryInfo:
         config.optionxform = str
 
         self.working_path = config['info']['working_path']
-        self.cvs_path = config['info']['cvs_path']
+        self.__cvs_path = config['info']['__cvs_path']
         self.index_path = config['info']['index_path']
 
         for name, path in config['branches'].items():
@@ -89,17 +94,17 @@ class DirectoryInfo:
             self.__branches_commits_paths[name] = path
 
     def save_config(self):
-        config_path = os.path.join(self.cvs_path, 'di.ini')
+        config_path = os.path.join(self.__cvs_path, 'di.ini')
         with open(config_path, 'w') as f:
             self.config.write(f)
 
     def init_config(self):
-        path = os.path.join(self.cvs_path, 'di.ini')
+        path = os.path.join(self.__cvs_path, 'di.ini')
 
         config = configparser.ConfigParser()
         config['info'] = {}
         config['info']['working_path'] = self.working_path
-        config['info']['cvs_path'] = self.cvs_path
+        config['info']['__cvs_path'] = self.__cvs_path
         config['info']['index_path'] = self.index_path
         config['branches'] = {}
         config['branches_commits'] = {}

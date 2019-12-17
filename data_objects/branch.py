@@ -53,15 +53,9 @@ class Branch:
         config.read(config_path)
         config.optionxform = str
 
-        commit_number = self.config['info']['current_commit_number']
-        if commit_number != 'None':
-            commit = Commit.make_commit_from_config(commit_number,
-                                                    self.name)
-        else:
-            commit = 'None'
-        self.current_commit_number = commit
-
-        self.name = self.config['info']['name']
+        commit_number = config['info']['current_commit_number']
+        self.current_commit_number = commit_number
+        self.name = config['info']['name']
 
     def save_config(self):
         di = DirectoryInfo()
