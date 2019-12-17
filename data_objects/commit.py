@@ -16,7 +16,7 @@ class Commit:
         self.__files = set()
         self.__files_with_copying_paths = {}
         self.__files_hashes = {}
-        self.previous_commit_number = 'NONE'
+        self.__previous_commit_number = 'NONE'
         self.__commit_number = str(uuid.uuid4())
 
     @property
@@ -65,7 +65,7 @@ class Commit:
         :return: previous commit
         """
         self.load_config()
-        commit = self.make_commit_from_config(self.previous_commit_number,
+        commit = self.make_commit_from_config(self.__previous_commit_number,
                                               self.branch_name)
         return commit
 
@@ -104,7 +104,7 @@ class Commit:
         config['info']['branch'] = self.branch_name
         config['info']['message'] = self.commit_message
         config['info']['number'] = self.commit_number
-        config['info']['previous'] = self.previous_commit_number
+        config['info']['previous'] = self.__previous_commit_number
         config['copy'] = {}
         for file, file_path in self.__files_with_copying_paths.items():
             config['copy'][file] = file_path
@@ -123,7 +123,7 @@ class Commit:
         self.commit_message = config['info']['message']
         self.branch_name = config['info']['branch']
 
-        self.previous_commit_number = config['info']['previous']
+        self.__previous_commit_number = config['info']['previous']
         self.__commit_number = config['info']['number']
 
         self.__files = set()

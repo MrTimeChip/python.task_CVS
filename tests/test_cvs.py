@@ -43,7 +43,8 @@ class TestCVS(unittest.TestCase):
         self.cvs.add('TESTING.txt')
         self.cvs.commit('Another commit')
         self.cvs.reset('--soft')
-        current_commit = self.cvs.repository.head.current_branch.current_commit
+        branch = self.cvs.repository.head.current_branch
+        current_commit = branch.get_current_commit()
         self.assertEqual('New commit', current_commit.commit_message)
 
 
