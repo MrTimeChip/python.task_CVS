@@ -35,6 +35,14 @@ class Head:
         commit_message = previous.commit_message
         print(f'New head commit is {commit_number} {commit_message}')
 
+    @staticmethod
+    def make_head_from_config():
+        di = DirectoryInfo()
+        path = os.path.join(di.cvs_path, 'head.ini')
+        head = Head()
+        head.get_data_from_config(path)
+        return head
+
     def load_config(self):
         di = DirectoryInfo()
         config_path = os.path.join(di.cvs_path, 'head.ini')

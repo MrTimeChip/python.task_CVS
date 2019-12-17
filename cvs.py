@@ -14,11 +14,10 @@ class CVS:
 
     def init(self, path):
         """Initializes new repository at given path"""
+        self.directory.init(path)
         self.index.init_config()
         self.index.set_directory_info(self.directory)
-        self.repository.set_directory_info(self.directory)
         self.working_directory.set_directory_info(self.directory)
-        self.directory.init(path)
 
         self.repository.init()
         self.working_directory.find_not_indexed_files(self.index.indexed_files)
