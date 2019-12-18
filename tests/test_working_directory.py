@@ -13,10 +13,10 @@ class WorkingDirectoryTest(unittest.TestCase):
         self.di = DirectoryInfo()
         path = os.getcwd()
         self.di.init(path)
+        self.wd.init_config()
         self.file_path = os.path.join(self.di.working_path, 'TESTING.txt')
         with open(self.file_path, "w+") as file:
             file.write('SOME STRING')
-        self.wd.set_directory_info(self.di)
 
     def tearDown(self) -> None:
         if os.path.exists(self.di.cvs_path):

@@ -7,9 +7,9 @@ class DirectoryInfo:
 
     def __init__(self):
         self.config = None
-        self.working_path = ""
+        self.__working_path = ""
         self.__cvs_path = ""
-        self.index_path = ""
+        self.__index_path = ""
         self.__branches_commits_paths = {}
         self.__branches_paths = {}
     
@@ -17,6 +17,16 @@ class DirectoryInfo:
     def cvs_path(self):
         self.load_config()
         return self.__cvs_path
+
+    @property
+    def index_path(self):
+        self.load_config()
+        return self.__index_path
+
+    @property
+    def working_path(self):
+        self.load_config()
+        return self.__working_path
 
     @property
     def branches_paths(self):
@@ -28,15 +38,15 @@ class DirectoryInfo:
 
     def init(self, path):
         """Initializes paths"""
-        self.working_path = path
+        self.__working_path = path
         if not os.path.exists(path):
             os.makedirs(path)
-        self.__cvs_path = os.path.join(self.working_path, ".CVS")
+        self.__cvs_path = os.path.join(self.__working_path, ".CVS")
         if not os.path.exists(self.__cvs_path):
             os.makedirs(self.__cvs_path)
-        self.index_path = os.path.join(self.__cvs_path, "INDEX")
-        if not os.path.exists(self.index_path):
-            os.makedirs(self.index_path)
+        self.__index_path = os.path.join(self.__cvs_path, "INDEX")
+        if not os.path.exists(self.__index_path):
+            os.makedirs(self.__index_path)
         self.init_config()
         self.add_branch_path('master')
 
@@ -83,9 +93,9 @@ class DirectoryInfo:
         config.read(config_path)
         config.optionxform = str
 
-        self.working_path = config['info']['working_path']
+        self.__working_path = config['info']['__working_path']
         self.__cvs_path = config['info']['__cvs_path']
-        self.index_path = config['info']['index_path']
+        self.__index_path = config['info']['__index_path']
 
         for name, path in config['branches'].items():
             self.__branches_paths[name] = path
@@ -103,9 +113,9 @@ class DirectoryInfo:
 
         config = configparser.ConfigParser()
         config['info'] = {}
-        config['info']['working_path'] = self.working_path
+        config['info']['__working_path'] = self.__working_path
         config['info']['__cvs_path'] = self.__cvs_path
-        config['info']['index_path'] = self.index_path
+        config['info']['__index_path'] = self.__index_path
         config['branches'] = {}
         config['branches_commits'] = {}
         with open(path, 'w') as cfg_file:

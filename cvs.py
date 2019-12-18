@@ -17,9 +17,9 @@ class CVS:
         self.directory.init(path)
         self.index.init_config()
         self.index.set_directory_info(self.directory)
-        self.working_directory.set_directory_info(self.directory)
 
         self.repository.init()
+        self.working_directory.init_config()
         self.working_directory.find_not_indexed_files(self.index.indexed_files)
         print(f'Working path is {path}')
         print(f'CVS path is {self.directory.cvs_path}')
