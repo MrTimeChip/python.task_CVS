@@ -18,10 +18,12 @@ class Index:
 
     @property
     def indexed_files(self):
+        self.load_config()
         return copy.copy(self.__indexed_files)
 
     @property
     def last_commit(self):
+        self.load_config()
         return self.__last_commit
 
     def set_directory_info(self, directory_info: DirectoryInfo):
@@ -57,6 +59,7 @@ class Index:
         self.load_config()
         commit = Commit(commit_message)
         commit.branch_name = branch_name
+        commit.init_config()
         commit.freeze_files(self.__indexed_files, self.__directory)
         self.__last_commit = commit
         self.config['info']['files'] = ''

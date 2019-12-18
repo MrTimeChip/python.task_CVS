@@ -40,13 +40,13 @@ class CVS:
 
     def reset(self, mode):
         """Resets current cvs state"""
-        if mode == '--soft':
+        if mode == 'soft':
             self.soft_reset()
             return
-        if mode == '-mixed' or mode == '':
+        if mode == 'mixed' or mode == '':
             self.mixed_reset()
             return
-        if mode == '--hard':
+        if mode == 'hard':
             self.hard_reset()
 
     def soft_reset(self):

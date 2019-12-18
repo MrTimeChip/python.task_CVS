@@ -36,7 +36,6 @@ class Commit:
 
     def freeze_files(self, indexed_files, directory_info: DirectoryInfo):
         """Freezes indexed files making hashes amd remembering their paths"""
-        self.init_config()
         self.load_config()
         index_path = directory_info.index_path
         self.__files = indexed_files
@@ -65,6 +64,8 @@ class Commit:
         :return: previous commit
         """
         self.load_config()
+        if self.__previous_commit_number == '':
+            return None
         commit = self.make_commit_from_config(self.__previous_commit_number,
                                               self.branch_name)
         return commit
@@ -144,7 +145,6 @@ class Commit:
         path = os.path.join(commits, commit_number, 'commit.ini')
         commit = Commit('none')
         commit.branch_name = branch_name
-        commit.init_config()
         commit.get_data_from_config(path)
         return commit
 

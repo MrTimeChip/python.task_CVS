@@ -30,6 +30,10 @@ class Head:
         branch = Branch(self.__current_branch_name)
         current_commit = branch.get_current_commit()
         previous = current_commit.get_previous_commit()
+        if previous is None:
+            branch.set_current_commit(None)
+            print(f'Commits fully reset: no commits anymore')
+            return
         branch.set_current_commit(previous)
         commit_number = previous.commit_number
         commit_message = previous.commit_message

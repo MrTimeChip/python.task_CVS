@@ -29,8 +29,7 @@ def create_parser():
         description='Current state will be saved and added to current commit.')
     add_parser.add_argument(
         'filename',
-        help='File to add to current commit.',
-        type=argparse.FileType())
+        help='File to add to current commit.')
 
     commit_parser = subparsers.add_parser(
         'commit',
@@ -48,8 +47,8 @@ def create_parser():
                     'Takes info from last versions from repository.')
     reset_parser.add_argument(
         'type',
-        choices=['--soft', '--mixed', '--hard'],
-        default='--mixed',
+        choices=['soft', 'mixed', 'hard'],
+        default='mixed',
         help='Reset types. Warning! --hard will overwrite your files!')
 
     subparsers.add_parser(

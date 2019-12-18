@@ -15,8 +15,12 @@ class Branch:
     def set_current_commit(self, commit):
         """Sets current commit"""
         self.load_config()
-        self.current_commit_number = commit.commit_number
-        self.config['info']['current_commit_number'] = commit.commit_number
+        if commit is None:
+            self.current_commit_number = ''
+            self.config['info']['current_commit_number'] = ''
+        else:
+            self.current_commit_number = commit.commit_number
+            self.config['info']['current_commit_number'] = commit.commit_number
         self.save_config()
 
     def get_current_commit(self) -> Commit:
