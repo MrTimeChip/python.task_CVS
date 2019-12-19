@@ -60,16 +60,14 @@ class Commit:
     def get_file_version(self, filename) -> str:
         prev_commit_number = self.__previous_commit_number
         if prev_commit_number == '':
-            print('Didnt find shit')
             return '1.0'
 
         prev_commit = Commit.make_commit_from_config(prev_commit_number,
                                                      self.branch_name)
 
         if filename in prev_commit.files_versions.keys():
-            print('Found in prev commit')
             version = float(prev_commit.files_versions[filename]) + 0.1
-            return str(version)
+            return "{:.1f}".format(version)
         return '1.0'
 
     def set_previous_commit_number(self, commit: str):
