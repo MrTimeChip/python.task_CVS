@@ -12,11 +12,11 @@ from data_objects.directory_info import DirectoryInfo
 class TestIndex(unittest.TestCase):
 
     def setUp(self) -> None:
+        path = os.getcwd()
+        self.di = DirectoryInfo()
+        self.di.init(path)
         self.index = Index()
         self.index.init_config()
-        self.di = DirectoryInfo()
-        path = os.getcwd()
-        self.di.init(path)
         self.file_path = os.path.join(self.di.working_path, 'TESTING.txt')
         with open(self.file_path, "w+") as file:
             file.write('SOME STRING')
