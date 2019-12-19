@@ -44,11 +44,15 @@ class TestIndex(unittest.TestCase):
         self.assertTrue(file_exists)
 
     def test_make_commit_should_return_new_commit(self):
+        branch = Branch('master')
+        branch.init_config()
         self.index.add_new_file('TESTING.txt')
         commit = self.index.make_commit("new commit", 'master')
         self.assertIsNotNone(commit)
 
     def test_make_commit_should_set_last_commit(self):
+        branch = Branch('master')
+        branch.init_config()
         self.assertEquals(self.index.last_commit, 'None')
         self.index.add_new_file('TESTING.txt')
         self.index.make_commit("new commit", 'master')
