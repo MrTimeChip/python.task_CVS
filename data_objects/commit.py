@@ -18,6 +18,7 @@ class Commit:
         self.__files = set()
         self.__files_with_copying_paths = {}
         self.__files_hashes = {}
+        self.__files_versions = {}
         self.__previous_commit_number = ''
         self.__commit_number = str(uuid.uuid4())
         self.__time = ''
@@ -37,6 +38,11 @@ class Commit:
         self.load_config()
         return copy.copy(self.__files_hashes)
 
+    @property
+    def files_versions(self):
+        self.load_config()
+        return copy.copy(self.__files_versions)
+
     def freeze_files(self, indexed_files, directory_info: DirectoryInfo):
         """Freezes indexed files making hashes amd remembering their paths"""
         self.load_config()
@@ -47,8 +53,24 @@ class Commit:
             file_hash = hashlib.md5(open(file_path, 'rb').read()).hexdigest()
             self.config['copy'][filename] = file_path
             self.config['hash'][filename] = file_hash
+            self.config['versions'][filename] = self.get_file_version(filename)
         self.save_config()
         self.load_config()
+
+    def get_file_version(self, filename) -> str:
+        prev_commit_number = self.__previous_commit_number
+        if prev_commit_number == '':
+            print('Didnt find shit')
+            return '1.0'
+
+        prev_commit = Commit.make_commit_from_config(prev_commit_number,
+                                                     self.branch_name)
+
+        if filename in prev_commit.files_versions.keys():
+            print('Found in prev commit')
+            version = float(prev_commit.files_versions[filename]) + 0.1
+            return str(version)
+        return '1.0'
 
     def set_previous_commit_number(self, commit: str):
         """Sets previous commit"""
@@ -115,9 +137,15 @@ class Commit:
         config['copy'] = {}
         for file, file_path in self.__files_with_copying_paths.items():
             config['copy'][file] = file_path
+
         config['hash'] = {}
         for file, hashcode in self.__files_hashes.items():
             config['hash'][file] = hashcode
+
+        config['versions'] = {}
+        for file, version in self.__files_versions.items():
+            config['versions'][file] = version
+
         open(path, 'a').close()
         with open(path, 'w') as cfg_file:
             config.write(cfg_file)
@@ -138,6 +166,7 @@ class Commit:
         self.__files = set()
         self.__files_with_copying_paths = {}
         self.__files_hashes = {}
+        self.__files_versions = {}
 
         for file, path in config['copy'].items():
             self.__files.add(file)
@@ -145,6 +174,9 @@ class Commit:
 
         for file, hashcode in config['hash'].items():
             self.__files_hashes[file] = hashcode
+
+        for file, version in config['versions'].items():
+            self.__files_versions[file] = version
 
     @staticmethod
     def make_commit_from_config(commit_number, branch_name):
@@ -172,7 +204,8 @@ class Commit:
         print(f'Message:\n \t{self.commit_message} \n')
         for file in self.__files_hashes:
             hashcode = self.__files_hashes[file]
-            print(f'{hashcode} {file} \n')
+            version = self.__files_versions[file]
+            print(f'{hashcode} {file} {version}\n')
         if self.__previous_commit_number != '':
             prev_commit_number = self.__previous_commit_number
             prev_commit = self.make_commit_from_config(prev_commit_number,

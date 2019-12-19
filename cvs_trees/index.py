@@ -4,6 +4,7 @@ import os
 from shutil import copyfile
 
 from cvs_trees.head import Head
+from data_objects.branch import Branch
 from data_objects.commit import Commit
 from data_objects.directory_info import DirectoryInfo
 
@@ -60,6 +61,11 @@ class Index:
         commit = Commit(commit_message)
         commit.branch_name = branch_name
         commit.init_config()
+        branch = Branch.make_branch_from_config(branch_name)
+        prev_commit = branch.get_current_commit()
+        if prev_commit is not None:
+            commit_number = prev_commit.commit_number
+            commit.set_previous_commit_number(commit_number)
         commit.freeze_files(self.__indexed_files, self.__directory)
         self.__last_commit = commit
         self.config['info']['files'] = ''

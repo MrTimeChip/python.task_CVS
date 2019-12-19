@@ -78,6 +78,6 @@ class Branch:
         config = configparser.ConfigParser()
         config['info'] = {}
         config['info']['name'] = self.name
-        config['info']['current_commit_number'] = 'None'
+        config['info']['current_commit_number'] = ''
         with open(path, 'w') as cfg_file:
             config.write(cfg_file)
