@@ -76,6 +76,14 @@ def create_parser():
         help='Returns branches list.',
         description='Returns all branches list')
 
+    checkout_parser = subparsers.add_parser(
+        'checkout',
+        help='Checkout branch.',
+        description='Sets current branch.')
+    checkout_parser.add_argument(
+        'checkout_branchname',
+        help='Branch name to checkout.')
+
     subparsers.add_parser(
         'log',
         help='Show commit history.',
@@ -104,6 +112,8 @@ def main():  # pragma: no cover
         cvs.branch(namespace.branchname)
     elif namespace.command == 'branches':
         cvs.branches()
+    elif namespace.command == 'checkout':
+        cvs.checkout(namespace.checkout_branchname)
     else:
         parser.print_help()
 

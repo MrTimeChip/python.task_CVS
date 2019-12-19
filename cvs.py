@@ -35,6 +35,7 @@ class CVS:
             print('No changes detected!')
             return
         branch_name = self.repository.current_branch.name
+        print('commit is at ' + branch_name)
         commit = self.index.make_commit(commit_message, branch_name)
         self.repository.add_commit(commit)
 
@@ -50,6 +51,13 @@ class CVS:
     def branches(self):
         di = DirectoryInfo()
         di.print_branches()
+
+    def checkout(self, branch_name):
+        di = DirectoryInfo()
+        if not di.branch_exists(branch_name):
+            print(f'No branch {branch_name} exists!')
+        self.repository.set_current_branch_name(branch_name)
+        print(f'Current branch is {branch_name}')
 
     def reset(self, mode):
         """Resets current cvs state"""

@@ -23,6 +23,17 @@ class Repository:
         self.load_config()
         return Branch.make_branch_from_config(self.__current_branch_name)
 
+    def set_current_branch_name(self, name):
+        self.load_config()
+        self.config['info']['current_branch'] = name
+        branch = Branch.make_branch_from_config(name)
+        commit = branch.get_current_commit()
+        if commit is None:
+            self.config['info']['last_commit'] = ''
+        else:
+            self.config['info']['last_commit'] = commit.commit_number
+        self.save_config()
+
     def set_directory_info(self, directory_info: DirectoryInfo):
         """Sets directory info"""
         self.directory = directory_info
@@ -45,7 +56,7 @@ class Repository:
         commit.set_previous_commit_number(self.last_commit_number)
         self.last_commit_number = commit.commit_number
         self.config['info']['last_commit'] = commit.commit_number
-        branch = Branch.make_branch_from_config('master')
+        branch = Branch.make_branch_from_config(self.__current_branch_name)
         branch.set_current_commit(commit)
         self.save_config()
 
