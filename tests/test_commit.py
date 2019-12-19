@@ -32,6 +32,7 @@ class TestCommit(unittest.TestCase):
         index.set_directory_info(self.di)
         index.add_new_file('TESTING.txt')
         self.commit.branch_name = 'master'
+        self.commit.init_config()
         self.commit.freeze_files(index.indexed_files, self.di)
         keys = self.commit.files_with_copying_paths.keys()
         self.assertTrue('TESTING.txt' in keys)
@@ -42,6 +43,7 @@ class TestCommit(unittest.TestCase):
         index.set_directory_info(self.di)
         index.add_new_file('TESTING.txt')
         self.commit.branch_name = 'master'
+        self.commit.init_config()
         self.commit.freeze_files(index.indexed_files, self.di)
         keys = self.commit.files_hashes.keys()
         self.assertTrue('TESTING.txt' in keys)

@@ -49,7 +49,7 @@ class TestIndex(unittest.TestCase):
         self.assertIsNotNone(commit)
 
     def test_make_commit_should_set_last_commit(self):
-        self.assertIsNone(self.index.last_commit)
+        self.assertEquals(self.index.last_commit, 'None')
         self.index.add_new_file('TESTING.txt')
         self.index.make_commit("new commit", 'master')
         self.assertIsNotNone(self.index.last_commit)
