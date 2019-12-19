@@ -85,6 +85,13 @@ class DirectoryInfo:
         self.load_config()
         return name in self.__branches_paths.keys()
 
+    def print_branches(self):
+        self.load_config()
+        print('_' * 40)
+        print('Branches: ')
+        for branch in self.__branches_paths.keys():
+            print(f"\t{branch}")
+
     def load_config(self):
         cwd = os.getcwd()
         config_path = os.path.join(cwd, '.CVS', 'di.ini')

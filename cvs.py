@@ -47,6 +47,10 @@ class CVS:
     def branch(self, name):
         self.repository.make_branch(name)
 
+    def branches(self):
+        di = DirectoryInfo()
+        di.print_branches()
+
     def reset(self, mode):
         """Resets current cvs state"""
         if mode == 'soft':

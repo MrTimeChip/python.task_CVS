@@ -71,6 +71,11 @@ def create_parser():
         'branchname',
         help='New branch name')
 
+    branches_parser = subparsers.add_parser(
+        'branches',
+        help='Returns branches list.',
+        description='Returns all branches list')
+
     subparsers.add_parser(
         'log',
         help='Show commit history.',
@@ -97,6 +102,8 @@ def main():  # pragma: no cover
         cvs.update(namespace.file, namespace.version)
     elif namespace.command == 'branch':
         cvs.branch(namespace.branchname)
+    elif namespace.command == 'branches':
+        cvs.branches()
     else:
         parser.print_help()
 
