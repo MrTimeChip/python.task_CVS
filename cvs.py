@@ -55,14 +55,14 @@ class CVS:
 
     def mixed_reset(self):
         """Resets head and index"""
-        self.repository.reset_head()
-        self.index.reset(self.repository.head)
+        if self.repository.reset_head():
+            self.index.reset(self.repository.head)
 
     def hard_reset(self):
         """Resets head, index and rewrites files in working path"""
-        self.repository.reset_head()
-        self.index.reset(self.repository.head)
-        self.working_directory.reset(self.index)
+        if self.repository.reset_head():
+            self.index.reset(self.repository.head)
+            self.working_directory.reset(self.index)
 
     def log(self):
         """

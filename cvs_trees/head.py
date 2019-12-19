@@ -24,20 +24,24 @@ class Head:
         self.config['info']['current_branch'] = self.__current_branch_name
         self.save_config()
 
-    def reset(self):
+    def reset(self) -> bool:
         """Moves head to previous commit"""
         self.load_config()
         branch = Branch(self.__current_branch_name)
         current_commit = branch.get_current_commit()
+        if current_commit is None:
+            print('Cannot reset: No commits found!')
+            return False
         previous = current_commit.get_previous_commit()
         if previous is None:
             branch.set_current_commit(None)
             print(f'Commits fully reset: no commits anymore')
-            return
+            return False
         branch.set_current_commit(previous)
         commit_number = previous.commit_number
         commit_message = previous.commit_message
         print(f'New head commit is {commit_number} {commit_message}')
+        return True
 
     @staticmethod
     def make_head_from_config():

@@ -23,12 +23,14 @@ class Branch:
             self.config['info']['current_commit_number'] = commit.commit_number
         self.save_config()
 
-    def get_current_commit(self) -> Commit:
+    def get_current_commit(self):
         """
         Returns current commit
         :returns current commit
         """
         self.load_config()
+        if self.current_commit_number == '':
+            return None
         commit = Commit.make_commit_from_config(self.current_commit_number,
                                                 self.name)
         return commit
