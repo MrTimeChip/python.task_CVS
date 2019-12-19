@@ -14,33 +14,39 @@ class TestCommit(unittest.TestCase):
         self.commit = Commit("NONE")
         self.wd = WorkingDirectory()
         self.di = DirectoryInfo()
-        path = os.path.join(os.getenv('APPDATA'), 'TESTING')
+        path = os.getcwd()
         self.di.init(path)
         self.file_path = os.path.join(self.di.working_path, 'TESTING.txt')
         with open(self.file_path, "w+") as file:
             file.write('SOME STRING')
-        self.wd.set_directory_info(self.di)
 
     def tearDown(self) -> None:
         if os.path.exists(self.di.cvs_path):
             shutil.rmtree(self.di.cvs_path)
+        if os.path.exists(self.file_path):
+            os.remove(self.file_path)
 
     def test_freeze_files_should_remember_copy_path_of_indexed_files(self):
         index = Index()
+        index.init_config()
         index.set_directory_info(self.di)
         index.add_new_file('TESTING.txt')
+        self.commit.branch_name = 'master'
+        self.commit.init_config()
         self.commit.freeze_files(index.indexed_files, self.di)
         keys = self.commit.files_with_copying_paths.keys()
         self.assertTrue('TESTING.txt' in keys)
 
     def test_freeze_files_should_make_hash_from_indexed_files(self):
         index = Index()
+        index.init_config()
         index.set_directory_info(self.di)
         index.add_new_file('TESTING.txt')
+        self.commit.branch_name = 'master'
+        self.commit.init_config()
         self.commit.freeze_files(index.indexed_files, self.di)
-        path = self.commit.files_with_copying_paths['TESTING.txt']
         keys = self.commit.files_hashes.keys()
-        self.assertTrue(path in keys)
+        self.assertTrue('TESTING.txt' in keys)
 
     def test_commit_number_should_return_unique_commit_number(self):
         first_number = self.commit.commit_number

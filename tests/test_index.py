@@ -12,10 +12,11 @@ from data_objects.directory_info import DirectoryInfo
 class TestIndex(unittest.TestCase):
 
     def setUp(self) -> None:
-        self.index = Index()
+        path = os.getcwd()
         self.di = DirectoryInfo()
-        path = os.path.join(os.getenv('APPDATA'), 'TESTING')
         self.di.init(path)
+        self.index = Index()
+        self.index.init_config()
         self.file_path = os.path.join(self.di.working_path, 'TESTING.txt')
         with open(self.file_path, "w+") as file:
             file.write('SOME STRING')
@@ -24,6 +25,8 @@ class TestIndex(unittest.TestCase):
     def tearDown(self) -> None:
         if os.path.exists(self.di.cvs_path):
             shutil.rmtree(self.di.cvs_path)
+        if os.path.exists(self.file_path):
+            os.remove(self.file_path)
 
     def test_add_new_file_raises_file_not_found_error_when_no_such_file(self):
         with self.assertRaises(FileNotFoundError):
@@ -41,23 +44,33 @@ class TestIndex(unittest.TestCase):
         self.assertTrue(file_exists)
 
     def test_make_commit_should_return_new_commit(self):
+        branch = Branch('master')
+        branch.init_config()
         self.index.add_new_file('TESTING.txt')
-        commit = self.index.make_commit("new commit")
+        commit = self.index.make_commit("new commit", 'master')
         self.assertIsNotNone(commit)
 
     def test_make_commit_should_set_last_commit(self):
-        self.assertIsNone(self.index.last_commit)
+        branch = Branch('master')
+        branch.init_config()
+        self.assertEquals(self.index.last_commit, 'None')
         self.index.add_new_file('TESTING.txt')
-        self.index.make_commit("new commit")
+        self.index.make_commit("new commit", 'master')
         self.assertIsNotNone(self.index.last_commit)
 
     def test_reset_should_reset_to_head_commit(self):
         head = Head()
-        head.current_branch = Branch('master')
+        head.init_config()
+        branch = Branch('master')
+        branch.init_config()
+        head.current_branch = branch
         commit = Commit('test')
-        head.current_branch.current_commit = commit
+        commit.branch_name = 'master'
+        commit.init_config()
+        head.current_branch.set_current_commit(commit)
         self.index.reset(head)
-        self.assertEqual(self.index.last_commit, commit)
+        self.assertEqual(self.index.last_commit.commit_number,
+                         commit.commit_number)
 
 
 if __name__ == '__main__':

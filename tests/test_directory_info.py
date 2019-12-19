@@ -7,7 +7,7 @@ from data_objects.directory_info import DirectoryInfo
 class DirectoryInfoTest(unittest.TestCase):
     def setUp(self) -> None:
         self.info = DirectoryInfo()
-        self.info.init(os.path.join(os.getenv('APPDATA'), 'TESTING'))
+        self.info.init(os.getcwd())
 
     def test_init_should_initialize_working_path(self):
         result = self.info.working_path
@@ -19,7 +19,7 @@ class DirectoryInfoTest(unittest.TestCase):
 
     def test_init_should_initialize_index_path(self):
         result = self.info.index_path
-        self.assertTrue(result.endswith('CVS\\INDEX'))
+        self.assertTrue(result.endswith('INDEX'))
 
     def test_add_branch_path_should_add_path_to_branch(self):
         self.info.add_branch_path("master")
@@ -34,12 +34,12 @@ class DirectoryInfoTest(unittest.TestCase):
     def test_get_branch_path_should_get_path_to_branch(self):
         self.info.add_branch_path("master")
         path = self.info.get_branch_path("master")
-        self.assertTrue(path.endswith("CVS\\master"))
+        self.assertTrue(path.endswith("master"))
 
     def test_get_commits_path_should_get_commits_path(self):
         self.info.add_branch_path("master")
         path = self.info.get_commits_path("master")
-        self.assertTrue(path.endswith("CVS\\master\\COMMITS"))
+        self.assertTrue(path.endswith("COMMITS"))
 
 
 if __name__ == '__main__':
