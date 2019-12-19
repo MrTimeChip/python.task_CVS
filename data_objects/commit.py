@@ -4,6 +4,7 @@ import hashlib
 import os
 import shutil
 import uuid
+import datetime
 
 from data_objects.directory_info import DirectoryInfo
 
@@ -19,6 +20,7 @@ class Commit:
         self.__files_hashes = {}
         self.__previous_commit_number = ''
         self.__commit_number = str(uuid.uuid4())
+        self.__time = ''
 
     @property
     def files(self):
@@ -107,6 +109,9 @@ class Commit:
         config['info']['message'] = self.commit_message
         config['info']['number'] = self.commit_number
         config['info']['previous'] = self.__previous_commit_number
+
+        config['info']['time'] = str(datetime.datetime.now())
+
         config['copy'] = {}
         for file, file_path in self.__files_with_copying_paths.items():
             config['copy'][file] = file_path
@@ -127,6 +132,8 @@ class Commit:
 
         self.__previous_commit_number = config['info']['previous']
         self.__commit_number = config['info']['number']
+
+        self.__time = config['info']['time']
 
         self.__files = set()
         self.__files_with_copying_paths = {}
@@ -161,6 +168,7 @@ class Commit:
         self.load_config()
         print('_' * 40)
         print(f'{self.commit_number} \n')
+        print(f'Time: {self.__time}\n')
         print(f'Message:\n \t{self.commit_message} \n')
         for file in self.__files_hashes:
             hashcode = self.__files_hashes[file]
