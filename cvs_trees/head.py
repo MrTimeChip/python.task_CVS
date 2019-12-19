@@ -33,6 +33,7 @@ class Head:
             print('Cannot reset: No commits found!')
             return False
         previous = current_commit.get_previous_commit()
+        current_commit.delete_commit()
         if previous is None:
             branch.set_current_commit(None)
             print(f'Commits fully reset: no commits anymore')

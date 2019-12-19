@@ -73,8 +73,14 @@ class Repository:
         self.init_config()
 
     def get_commit_history(self):
-        print('sss')
-        # self.last_commit_number.print_info()
+        self.load_config()
+        print(f'Commit history for branch: {self.__current_branch_name}')
+        if self.last_commit_number != '':
+            commit = Commit.make_commit_from_config(self.last_commit_number,
+                                                    self.__current_branch_name)
+            commit.print_info()
+        else:
+            print('No commits found!')
 
     def load_config(self):
         di = DirectoryInfo()

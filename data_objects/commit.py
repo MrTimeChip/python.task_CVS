@@ -2,6 +2,7 @@ import configparser
 import copy
 import hashlib
 import os
+import shutil
 import uuid
 
 from data_objects.directory_info import DirectoryInfo
@@ -12,11 +13,11 @@ class Commit:
     def __init__(self, commit_message):
         self.config = configparser.ConfigParser()
         self.commit_message = commit_message
-        self.branch_name = 'NONE'
+        self.branch_name = ''
         self.__files = set()
         self.__files_with_copying_paths = {}
         self.__files_hashes = {}
-        self.__previous_commit_number = 'NONE'
+        self.__previous_commit_number = ''
         self.__commit_number = str(uuid.uuid4())
 
     @property
@@ -148,12 +149,24 @@ class Commit:
         commit.get_data_from_config(path)
         return commit
 
+    def delete_commit(self):
+        di = DirectoryInfo()
+        commits = di.get_commits_path(self.branch_name)
+        fullpath = os.path.join(commits, self.commit_number)
+        if os.path.exists(fullpath):
+            shutil.rmtree(fullpath)
+
     def print_info(self):
         """Prints commit history, starting from this commit"""
         self.load_config()
-        print(self.commit_number + '\n')
-        print(self.commit_message + '\n')
+        print('_' * 40)
+        print(f'{self.commit_number} \n')
+        print(f'Message:\n \t{self.commit_message} \n')
         for file in self.__files_hashes:
             hashcode = self.__files_hashes[file]
             print(f'{hashcode} {file} \n')
-        print("")
+        if self.__previous_commit_number != '':
+            prev_commit_number = self.__previous_commit_number
+            prev_commit = self.make_commit_from_config(prev_commit_number,
+                                                       self.branch_name)
+            prev_commit.print_info()
