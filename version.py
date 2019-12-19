@@ -63,6 +63,14 @@ def create_parser():
         'version',
         help='Version of file to get.')
 
+    branch_parser = subparsers.add_parser(
+        'branch',
+        help='Make new branch.',
+        description='Makes new branch.')
+    branch_parser.add_argument(
+        'branchname',
+        help='New branch name')
+
     subparsers.add_parser(
         'log',
         help='Show commit history.',
@@ -87,6 +95,8 @@ def main():  # pragma: no cover
         cvs.log()
     elif namespace.command == 'update':
         cvs.update(namespace.file, namespace.version)
+    elif namespace.command == 'branch':
+        cvs.branch(namespace.branchname)
     else:
         parser.print_help()
 

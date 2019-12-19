@@ -99,7 +99,6 @@ class Index:
 
     def load_config(self):
         di = DirectoryInfo()
-        di.init(os.getcwd())
         config_path = os.path.join(di.index_path, 'index.ini')
         config = configparser.ConfigParser()
         config.read(config_path)
@@ -126,14 +125,12 @@ class Index:
 
     def save_config(self):
         di = DirectoryInfo()
-        di.init(os.getcwd())
         config_path = os.path.join(di.index_path, 'index.ini')
         with open(config_path, 'w') as f:
             self.config.write(f)
 
     def init_config(self):
         di = DirectoryInfo()
-        di.init(os.getcwd())
         path = os.path.join(di.index_path, 'index.ini')
 
         config = configparser.ConfigParser()

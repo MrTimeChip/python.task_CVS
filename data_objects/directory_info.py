@@ -12,7 +12,7 @@ class DirectoryInfo:
         self.__index_path = ""
         self.__branches_commits_paths = {}
         self.__branches_paths = {}
-    
+
     @property
     def cvs_path(self):
         self.load_config()
@@ -30,10 +30,12 @@ class DirectoryInfo:
 
     @property
     def branches_paths(self):
+        self.load_config()
         return copy.copy(self.__branches_paths)
 
     @property
     def branches_commits_paths(self):
+        self.load_config()
         return copy.copy(self.__branches_commits_paths)
 
     def init(self, path):
@@ -79,6 +81,10 @@ class DirectoryInfo:
             raise ValueError(f"No branch found! {branch_name}")
         return self.config['branches_commits'][branch_name]
 
+    def branch_exists(self, name) -> bool:
+        self.load_config()
+        return name in self.__branches_paths.keys()
+
     def load_config(self):
         cwd = os.getcwd()
         config_path = os.path.join(cwd, '.CVS', 'di.ini')
@@ -93,9 +99,9 @@ class DirectoryInfo:
         config.read(config_path)
         config.optionxform = str
 
-        self.__working_path = config['info']['__working_path']
-        self.__cvs_path = config['info']['__cvs_path']
-        self.__index_path = config['info']['__index_path']
+        self.__working_path = config['info']['working_path']
+        self.__cvs_path = config['info']['cvs_path']
+        self.__index_path = config['info']['index_path']
 
         for name, path in config['branches'].items():
             self.__branches_paths[name] = path
@@ -104,18 +110,20 @@ class DirectoryInfo:
             self.__branches_commits_paths[name] = path
 
     def save_config(self):
-        config_path = os.path.join(self.__cvs_path, 'di.ini')
+        cwd = os.getcwd()
+        config_path = os.path.join(cwd, '.CVS', 'di.ini')
         with open(config_path, 'w') as f:
             self.config.write(f)
 
     def init_config(self):
-        path = os.path.join(self.__cvs_path, 'di.ini')
+        cwd = os.getcwd()
+        path = os.path.join(cwd, '.CVS', 'di.ini')
 
         config = configparser.ConfigParser()
         config['info'] = {}
-        config['info']['__working_path'] = self.__working_path
-        config['info']['__cvs_path'] = self.__cvs_path
-        config['info']['__index_path'] = self.__index_path
+        config['info']['working_path'] = self.__working_path
+        config['info']['cvs_path'] = self.__cvs_path
+        config['info']['index_path'] = self.__index_path
         config['branches'] = {}
         config['branches_commits'] = {}
         with open(path, 'w') as cfg_file:

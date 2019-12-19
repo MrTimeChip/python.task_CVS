@@ -37,12 +37,15 @@ class CVS:
         branch_name = self.repository.current_branch.name
         commit = self.index.make_commit(commit_message, branch_name)
         self.repository.add_commit(commit)
-        self.repository.point_to_last_commit()
 
     def update(self, filename, version):
+        """Updates file with a specific version from repository"""
         branch_name = self.repository.current_branch.name
         branch = Branch.make_branch_from_config(branch_name)
         branch.update(filename, version)
+
+    def branch(self, name):
+        self.repository.make_branch(name)
 
     def reset(self, mode):
         """Resets current cvs state"""

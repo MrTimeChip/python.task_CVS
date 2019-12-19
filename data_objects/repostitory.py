@@ -54,23 +54,24 @@ class Repository:
         self.load_config()
         self.head.reset()
 
-    def point_to_last_commit(self):
-        """Points to last commit"""
-        self.load_config()
-        branch = Branch.make_branch_from_config(self.__current_branch_name)
-        commit = Commit.make_commit_from_config(self.last_commit_number,
-                                                self.__current_branch_name)
-        branch.set_current_commit(commit)
-
     def init(self):
         """Initializes repository with master branch"""
         branch = Branch('master')
         branch.init_config()
         self.__current_branch_name = 'master'
-        self.directory.add_branch_path('master')
         self.head.init_config()
         self.head.current_branch = branch
         self.init_config()
+
+    def make_branch(self, name):
+        self.load_config()
+        di = DirectoryInfo()
+        if di.branch_exists(name):
+            print(f'Branch \'{name}\' already exists!')
+            return
+        di.add_branch_path(name)
+        self.current_branch.copy_to_branch(name)
+        print(f'Successfully made branch {name}')
 
     def get_commit_history(self):
         self.load_config()

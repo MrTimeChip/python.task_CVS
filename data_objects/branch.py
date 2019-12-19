@@ -1,5 +1,6 @@
 import configparser
 import os
+import shutil
 from shutil import copyfile
 
 from data_objects.commit import Commit
@@ -52,9 +53,20 @@ class Branch:
         copyfile(file_repo, file_origin)
         print(f'File {filename} version is now {version}')
 
+    def copy_to_branch(self, name):
+        self.load_config()
+        di = DirectoryInfo()
+        from_commits_path = di.get_commits_path(self.name)
+        to_branch_path = di.get_commits_path(name)
+        if os.path.exists(to_branch_path):
+            shutil.rmtree(to_branch_path)
+        shutil.copytree(from_commits_path, to_branch_path)
+        branch_to = Branch(name)
+        branch_to.init_config()
+        branch_to.set_current_commit(self.get_current_commit())
+
     def load_config(self):
         di = DirectoryInfo()
-        di.init(os.getcwd())
         config_path = os.path.join(di.get_branch_path(self.name), 'branch.ini')
         config = configparser.ConfigParser()
         config.read(config_path)
@@ -82,14 +94,12 @@ class Branch:
 
     def save_config(self):
         di = DirectoryInfo()
-        di.init(os.getcwd())
         config_path = os.path.join(di.get_branch_path(self.name), 'branch.ini')
         with open(config_path, 'w') as f:
             self.config.write(f)
 
     def init_config(self):
         di = DirectoryInfo()
-        di.init(os.getcwd())
         path = os.path.join(di.get_branch_path(self.name), 'branch.ini')
 
         config = configparser.ConfigParser()
