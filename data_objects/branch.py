@@ -1,6 +1,9 @@
 import configparser
 import os
 import shutil
+
+import difflib
+
 from shutil import copyfile
 
 from data_objects.commit import Commit
@@ -38,12 +41,9 @@ class Branch:
         return commit
 
     def update(self, filename, version):
-        self.load_config()
-        current_commit = self.get_current_commit()
-        found_number = current_commit.search_file_commit_number(filename,
-                                                                version)
+        found_number = self.find_commit_file_version_number(filename,
+                                                            version)
         if found_number == '':
-            print(f'No file {filename} with version {version} found.')
             return
         di = DirectoryInfo()
         branch_path = di.get_commits_path(self.name)
@@ -52,6 +52,39 @@ class Branch:
         file_origin = os.path.join(di.working_path, filename)
         copyfile(file_repo, file_origin)
         print(f'File {filename} version is now {version}')
+
+    def find_commit_file_version_number(self, filename, version):
+        self.load_config()
+        current_commit = self.get_current_commit()
+        found_number = current_commit.search_file_commit_number(filename,
+                                                                version)
+        if found_number == '':
+            print(f'No file {filename} with version {version} found.')
+        return found_number
+
+    def diff(self, filename, first_version, second_version):
+        di = DirectoryInfo()
+        first_number = self.find_commit_file_version_number(filename,
+                                                            first_version)
+        second_number = self.find_commit_file_version_number(filename,
+                                                             second_version)
+        if first_number == '' or second_number == '':
+            return
+        branch_path = di.get_commits_path(self.name)
+        first_commit_path = os.path.join(branch_path, first_number)
+        second_commit_path = os.path.join(branch_path, second_number)
+
+        first_file_path = os.path.join(first_commit_path, filename)
+        second_file_path = os.path.join(second_commit_path, filename)
+
+        first_file = open(first_file_path).readlines()
+        second_file = open(second_file_path).readlines()
+
+        print('_' * 40)
+        print(f'Diff between {filename}: {first_version} and {second_version}')
+
+        for line in difflib.unified_diff(first_file, second_file):
+            print(line)
 
     def copy_to_branch(self, name):
         self.load_config()

@@ -84,6 +84,20 @@ def create_parser():
         'checkout_branchname',
         help='Branch name to checkout.')
 
+    diff_parser = subparsers.add_parser(
+        'diff',
+        help='Show diff between two files version.',
+        description='Shows diff between two files version.')
+    diff_parser.add_argument(
+        'diff_filename',
+        help='Name of file to compare.')
+    diff_parser.add_argument(
+        'first_version',
+        help='First of versions to compare.')
+    diff_parser.add_argument(
+        'second_version',
+        help='Second of versions to compare')
+
     subparsers.add_parser(
         'log',
         help='Show commit history.',
@@ -114,6 +128,10 @@ def main():  # pragma: no cover
         cvs.branches()
     elif namespace.command == 'checkout':
         cvs.checkout(namespace.checkout_branchname)
+    elif namespace.command == 'diff':
+        cvs.diff(namespace.diff_filename,
+                 namespace.first_version,
+                 namespace.second_version)
     else:
         parser.print_help()
 

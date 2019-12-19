@@ -59,6 +59,11 @@ class CVS:
         self.repository.set_current_branch_name(branch_name)
         print(f'Current branch is {branch_name}')
 
+    def diff(self, filename, first_version, second_version):
+        branch_name = self.repository.current_branch.name
+        branch = Branch.make_branch_from_config(branch_name)
+        branch.diff(filename, first_version, second_version)
+
     def reset(self, mode):
         """Resets current cvs state"""
         if mode == 'soft':
