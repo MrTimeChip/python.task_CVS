@@ -1,5 +1,6 @@
 from cvs_trees.index import Index
 from cvs_trees.working_directory import WorkingDirectory
+from data_objects.branch import Branch
 from data_objects.directory_info import DirectoryInfo
 from data_objects.repostitory import Repository
 
@@ -37,6 +38,11 @@ class CVS:
         commit = self.index.make_commit(commit_message, branch_name)
         self.repository.add_commit(commit)
         self.repository.point_to_last_commit()
+
+    def update(self, filename, version):
+        branch_name = self.repository.current_branch.name
+        branch = Branch.make_branch_from_config(branch_name)
+        branch.update(filename, version)
 
     def reset(self, mode):
         """Resets current cvs state"""

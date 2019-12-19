@@ -1,5 +1,6 @@
 import configparser
 import os
+from shutil import copyfile
 
 from data_objects.commit import Commit
 from data_objects.directory_info import DirectoryInfo
@@ -34,6 +35,22 @@ class Branch:
         commit = Commit.make_commit_from_config(self.current_commit_number,
                                                 self.name)
         return commit
+
+    def update(self, filename, version):
+        self.load_config()
+        current_commit = self.get_current_commit()
+        found_number = current_commit.search_file_commit_number(filename,
+                                                                version)
+        if found_number == '':
+            print(f'No file {filename} with version {version} found.')
+            return
+        di = DirectoryInfo()
+        branch_path = di.get_commits_path(self.name)
+        commit_path = os.path.join(branch_path, found_number)
+        file_repo = os.path.join(commit_path, filename)
+        file_origin = os.path.join(di.working_path, filename)
+        copyfile(file_repo, file_origin)
+        print(f'File {filename} version is now {version}')
 
     def load_config(self):
         di = DirectoryInfo()

@@ -51,6 +51,18 @@ def create_parser():
         default='mixed',
         help='Reset types. Warning! --hard will overwrite your files!')
 
+    update_parser = subparsers.add_parser(
+        'update',
+        help='Get certain version from repository.',
+        description='Gets certain version from repository.'
+                    'Replaces your current version with one from repository.')
+    update_parser.add_argument(
+        'file',
+        help='Filename to get from repository.')
+    update_parser.add_argument(
+        'version',
+        help='Version of file to get.')
+
     subparsers.add_parser(
         'log',
         help='Show commit history.',
@@ -73,6 +85,8 @@ def main():  # pragma: no cover
         cvs.add(namespace.filename)
     elif namespace.command == 'log':
         cvs.log()
+    elif namespace.command == 'update':
+        cvs.update(namespace.file, namespace.version)
     else:
         parser.print_help()
 

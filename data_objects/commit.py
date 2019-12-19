@@ -93,6 +93,17 @@ class Commit:
                                               self.branch_name)
         return commit
 
+    def search_file_commit_number(self, filename, version):
+        self.load_config()
+        if filename in self.__files_versions.keys():
+            if self.__files_versions[filename] == version:
+                return self.commit_number
+        if self.__previous_commit_number == '':
+            return ''
+        prev_commit = self.get_previous_commit()
+        return prev_commit.search_file_commit_number(filename,
+                                                     version)
+
     @property
     def commit_number(self):
         """Returns commit number"""
