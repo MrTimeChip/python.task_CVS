@@ -65,13 +65,13 @@ def main():  # pragma: no cover
     namespace = parser.parse_args(sys.argv[1:])
     if namespace.command == 'init':
         cvs.init(namespace.directory)
-    if namespace.command == 'commit':
+    elif namespace.command == 'commit':
         cvs.commit(namespace.commit_message)
-    if namespace.command == 'reset':
+    elif namespace.command == 'reset':
         cvs.reset(namespace.type)
-    if namespace.command == 'add':
+    elif namespace.command == 'add':
         cvs.add(namespace.filename)
-    if namespace.command == 'log':
+    elif namespace.command == 'log':
         cvs.log()
     else:
         parser.print_help()
